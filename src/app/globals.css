@@ -1,0 +1,22 @@
+/* globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ตั้งค่าให้ขนาดหน้าจอ iPhone 15 Pro Max */
+.iphone-15-pro-max-container {
+  width: 430px;
+  height: 932px;
+  margin: 0 auto;
+  /* จัดกึ่งกลาง */
+  border: 1px solid #ccc;
+  /* เส้นขอบเพื่อดูขนาดหน้าจอ */
+}
+
+/* Media query เพื่อปรับขนาดเมื่อหน้าจอเล็กกว่า 430px */
+@media (max-width: 430px) {
+  .iphone-15-pro-max-container {
+    width: 100%;
+    height: auto;
+  }
+}
