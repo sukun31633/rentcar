@@ -7,7 +7,7 @@ function Footer() {
     <footer className="bg-white border-t py-2 fixed bottom-0 w-full shadow-lg z-50">
       <div className="container max-w-screen-lg mx-auto px-4 flex justify-between items-center relative">
         {/* เมนูด้านข้าง */}
-        <Link href="/" className="text-sm text-center flex-1">
+        <Link href="/app" className="text-sm text-center flex-1">
           <div className="flex flex-col items-center">
             <FaHome className="h-6 w-6 mb-1" />
             <span>หน้าแรก</span>
