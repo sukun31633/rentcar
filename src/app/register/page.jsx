@@ -19,7 +19,7 @@ function RegisterPage() {
     const { data: session } = useSession();
 
     useEffect(() => {
-        if (session) router.replace('/welcome');
+        if (session) router.replace('/login');
     }, [session, router]);
 
     const handleSubmit = async (e) => {
@@ -68,7 +68,7 @@ function RegisterPage() {
                 setSuccess("User registration successful!");
                 setError("");
                 // นำผู้ใช้ไปยังหน้า welcome หรือหน้าอื่นที่ต้องการ
-                router.replace('/welcome');
+                router.replace('/login');
             } else {
                 setError("Registration failed.");
             }
