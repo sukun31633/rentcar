@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from 'next/navigation'; 
-import Image from "next/image";
+import { FaCar } from "react-icons/fa";  // นำเข้าไอคอน FaCar
 import Container from "./components/Container";
 
 export default function Home() {
@@ -18,15 +18,11 @@ export default function Home() {
 
   return (
     <Container>
-      <main className="bg-blue-800 min-h-screen flex justify-center items-center"> {/* ปรับสีพื้นหลัง */}
+      <main className="min-h-screen flex justify-center items-center" 
+        style={{ background: 'linear-gradient(#0068F9, #00347D)' }}> {/* ใช้ linear-gradient สำหรับไล่สี */}
         <div className="flex flex-col items-center justify-center p-6">
-          <Image
-            src="/image/car4.png"  // ตรวจสอบเส้นทางให้ถูกต้อง
-            alt="Car Image"
-            width={400} 
-            height={400} 
-            className="object-contain mb-2"
-          />
+          {/* ใช้ไอคอน FaCar แทนรูปภาพ */}
+          <FaCar className="text-white text-9xl mb-2" /> {/* ขนาดและสีของไอคอน */}
         </div>
       </main>
     </Container>

@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation'; // ใช้ useRouter จาก next/navigation
-import { FaHeart } from 'react-icons/fa'; // ใช้ไอคอนรูปหัวใจ
 import Footer from '../components/Footer';
+import Header from '../components/Header'; // นำเข้า Header
 
 function MessagesPage() {
     const router = useRouter();
@@ -23,11 +23,8 @@ function MessagesPage() {
 
     return (
         <div className="min-h-screen flex flex-col items-center bg-gray-100">
-            {/* Header */}
-            <header className="w-full max-w-md bg-blue-500 text-white shadow p-4 flex items-center justify-between">
-                <h1 className="text-lg font-semibold">รถเช่า</h1>
-                <FaHeart className="text-white" />
-            </header>
+            {/* นำเข้า Header */}
+            <Header />
 
             {/* Main Content */}
             <main className="flex-grow w-full max-w-md p-4 bg-white">

@@ -1,4 +1,3 @@
-// src/app/page.js
 import React from 'react';
 import Header from '../components/Header'; // เปลี่ยนจาก Navbar เป็น Header
 import Footer from '../components/Footer';
@@ -21,7 +20,9 @@ export default function Home() {
         <Header />
 
         {/* Carousel Section */}
-        <Carousel images={['/image1.jpg', '/image2.jpg', '/image3.jpg']} />
+        <section className="w-full">
+          <Carousel images={['/image1.jpg', '/image2.jpg', '/image3.jpg']} />
+        </section>
 
         {/* Latest Cars Section */}
         <section className="p-4 w-full">
@@ -38,7 +39,6 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-4">
             <CarCard name="Mazda 2" year="2020" imageSrc="/car3.jpg" />
             <CarCard name="Toyota Vios" year="2018" imageSrc="/car4.jpg" />
-            {/* เพิ่มรถใหม่ด้วยภาพ car4.png */}
             <CarCard name="New Car" year="2022" imageSrc="/image/car4.png" />
           </div>
         </section>
@@ -61,6 +61,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Footer */}
         <Footer />
       </main>
     </Container>

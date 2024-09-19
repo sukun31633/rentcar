@@ -46,7 +46,8 @@ function LoginPage() {
 
     return (
         <Container>
-            <div className='flex-grow bg-blue-600 flex justify-center items-center p-4'>
+            {/* เพิ่มไล่สีพื้นหลังด้วย Tailwind CSS */}
+            <div className='flex-grow bg-gradient-to-b from-blue-600 to-blue-900 flex justify-center items-center p-4'>
                 <div className='w-full max-w-xs bg-transparent'>
                     <h2 className='text-left text-xl font-bold text-white mb-4'>ล็อกอิน</h2>
                     <form onSubmit={handleSubmit} className='space-y-4'>

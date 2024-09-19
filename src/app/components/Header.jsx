@@ -1,39 +1,35 @@
 "use client";
 
 import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { useRouter } from 'next/navigation'; // นำเข้า useRouter
+import { FaHeart, FaCar } from 'react-icons/fa'; // นำเข้า FaCar และ FaHeart ไอคอน
 import { signOut } from 'next-auth/react';
+import Link from 'next/link'; // นำเข้า Link จาก Next.js
 
 function Header({ session }) {
+  const router = useRouter(); // เรียกใช้ useRouter
+
+  // ฟังก์ชันสำหรับนำทางไปยังหน้าแรก
+  const handleLogoClick = () => {
+    router.push('/'); // นำทางไปยังหน้า Home
+  };
+
   return (
     <header className='flex justify-between items-center bg-blue-800 p-4 w-full'>
-      <div className='flex items-center space-x-2 flex-1'>
-        {/* โลโก้รถเช่า */}
-        <Link href="/" className="flex items-center cursor-pointer">
-          <Image
-            className='object-contain'
-            src="/image/car5.png"
-            width={70}
-            height={70}
-            alt='Car Rental Logo'
-          />
-        </Link>
+      {/* โลโก้รถเช่า คลิกแล้วกลับไปหน้าแรก */}
+      <div className='flex items-center space-x-2 flex-1 cursor-pointer' onClick={handleLogoClick}>
+        <FaCar className="text-white text-3xl" /> {/* ใช้ไอคอน FaCar แทนโลโก้ */}
+        <span className="ml-2 text-white text-lg font-semibold">รถเช่า</span> {/* ข้อความโลโก้ */}
       </div>
 
       {/* ไอคอนเพิ่มเติม และการจัดตำแหน่ง */}
       <div className='flex items-center space-x-4'>
         {/* ลิงก์ไปยังหน้า Favorites */}
-        <Link href="/favorites" className="relative">
-          <Image
-            className='object-contain'
-            src="/image/h.png"
-            width={60}
-            height={60}
-            alt='Favorites'
-          />
+        <Link href="/favorites">
+          <FaHeart className="text-white text-3xl relative" /> {/* ใช้ FaHeart สำหรับลิงก์ Favorites */}
         </Link>
-        {/* เพิ่มปุ่มออกจากระบบหากมี session */}
+
+        {/* เพิ่มปุ่มออกจากระบบถ้ามี session */}
         {session && (
           <button 
             onClick={() => signOut()}
