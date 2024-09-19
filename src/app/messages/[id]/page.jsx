@@ -22,8 +22,11 @@ const ChatPage = ({ params }) => {
     const handleSendMessage = () => {
         if (inputMessage.trim() === '') return; // ถ้าไม่มีข้อความให้ return
 
+        const now = new Date();
+        const formattedTime = `${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH')}`;
+
         // เพิ่มข้อความใหม่เข้าไปใน array ของ messages
-        setMessages([...messages, { id: messages.length + 1, sender: 'user', message: inputMessage, time: new Date().toLocaleString() }]);
+        setMessages([...messages, { id: messages.length + 1, sender: 'user', message: inputMessage, time: formattedTime }]);
         setInputMessage(''); // ล้าง input หลังจากส่งข้อความ
     };
 
