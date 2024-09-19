@@ -1,4 +1,3 @@
-// app/favorites/page.jsx
 "use client";
 
 import React from 'react';
@@ -16,7 +15,7 @@ function CarListPage() {
     {
       id: 1,
       name: "Mazda 2 2017",
-      image: "/car-image.jpg",
+      image: "/image/cmazda2.png",
       price: "1,999",
       discount: "48%",
       services: [
@@ -31,17 +30,17 @@ function CarListPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-between">
-      <header className="bg-white shadow p-4 flex items-center justify-between">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
+      <header className="w-full max-w-md bg-white shadow p-4 flex items-center justify-between mx-auto">
         <button onClick={handleBack} className="text-gray-600">
-          ←
+          <FaArrowLeft />
         </button>
         <h1 className="text-center text-lg font-semibold flex-grow">
           รายการโปรด
         </h1>
       </header>
 
-      <main className="flex-grow p-4">
+      <main className="flex-grow w-full max-w-md p-4 mx-auto">
         {cars.map(car => (
           <div key={car.id} className="bg-white shadow-md rounded-md overflow-hidden mb-4 flex">
             <div className="relative w-1/3">

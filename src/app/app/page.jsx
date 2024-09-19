@@ -20,16 +20,16 @@ export default function Home() {
         <Header />
 
         {/* Carousel Section */}
-        <section className="w-full">
-          <Carousel images={['/image1.jpg', '/image2.jpg', '/image3.jpg']} />
+        <section className="w-full h-64">
+          <Carousel images={['/image/bgon1.png', '/image/bgon2.png', '/image/bgon3.png']} />
         </section>
 
         {/* Latest Cars Section */}
         <section className="p-4 w-full">
           <h2 className="text-2xl font-bold mb-4">เข้าสู่ล่าสุด</h2>
           <div className="grid grid-cols-2 gap-4">
-            <CarCard name="Mazda 3" year="2021" imageSrc="/car1.jpg" />
-            <CarCard name="Toyota Altis" year="2019" imageSrc="/car2.jpg" />
+            <CarCard name="Mazda 3" year="2021" imageSrc="/image/cmazda3.png" />
+            <CarCard name="Toyota Altis" year="2019" imageSrc="/image/ctoyota.png" />
           </div>
         </section>
 
@@ -37,9 +37,9 @@ export default function Home() {
         <section className="p-4 w-full">
           <h2 className="text-2xl font-bold mb-4">ได้รับความนิยม</h2>
           <div className="grid grid-cols-2 gap-4">
-            <CarCard name="Mazda 2" year="2020" imageSrc="/car3.jpg" />
-            <CarCard name="Toyota Vios" year="2018" imageSrc="/car4.jpg" />
-            <CarCard name="New Car" year="2022" imageSrc="/image/car4.png" />
+            <CarCard name="Mazda 2" year="2020" imageSrc="/image/cmazda2.png" />
+            <CarCard name="Toyota Vios" year="2018" imageSrc="/image/ctoyota.png" />
+            <CarCard name="Honda civic fl15" year="2024" imageSrc="/image/chonda.png" />
           </div>
         </section>
 
@@ -47,8 +47,11 @@ export default function Home() {
         <section className="p-4 w-full">
           <h2 className="text-2xl font-bold mb-4">ปลายทางแนะนำ</h2>
           <div className="grid grid-cols-2 gap-4">
-            <DestinationCard name="พัทยา" imageSrc="/destination1.jpg" />
-            <DestinationCard name="เชียงใหม่" imageSrc="/destination2.jpg" />
+            <DestinationCard name="กรุงเทพ" imageSrc="/image/travelbangkok.png" />
+            <DestinationCard name="พิษณุโลก" imageSrc="/image/travelphit.png" />
+            <DestinationCard name="ภูเก็ต" imageSrc="/image/travelphuket.png" />
+            <DestinationCard name="ทะเลหมอก" imageSrc="/image/travelsee.png" />
+            <DestinationCard name="พัทยา" imageSrc="/image/travelya.png" />
           </div>
         </section>
 
@@ -56,8 +59,10 @@ export default function Home() {
         <section className="p-4 w-full">
           <h2 className="text-2xl font-bold mb-4">กิจกรรมพิเศษ</h2>
           <div className="grid grid-cols-2 gap-4">
-            <PromotionCard title="ลดราคา 250 บาท" imageSrc="/promo1.jpg" />
-            <PromotionCard title="ลดราคา 250 บาท" imageSrc="/promo2.jpg" />
+            <PromotionCard title="ลดราคาเหลือ 10000 ฿/hrs." imageSrc= "/image/honda.png" />
+            <PromotionCard title="ลดราคาเหลือ 1000 ฿/hrs." imageSrc= "/image/mazda2.png" />
+            <PromotionCard title="ลดราคาเหลือ 1800 ฿/hrs." imageSrc="/image/mazda3.png" />
+            <PromotionCard title="ลดราคาเหลือ 500 ฿/hrs." imageSrc= "/image/toyota.png" />
           </div>
         </section>
 

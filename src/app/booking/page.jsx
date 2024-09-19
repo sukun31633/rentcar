@@ -1,7 +1,6 @@
 "use client";
 
 import React from 'react';
-import { FaHeart } from 'react-icons/fa';
 import Footer from '../components/Footer';
 import Container from '../components/Container';
 import Header from '../components/Header'; // นำเข้า Header
@@ -9,7 +8,7 @@ import Header from '../components/Header'; // นำเข้า Header
 function BookingPage() {
     return (
         <Container>
-            <div className="min-h-screen flex flex-col justify-between bg-gray-100">
+            <div className="min-h-screen flex flex-col justify-between bg-gray-100 pb-16"> {/* เพิ่ม pb-16 */}
                 {/* นำเข้า Header */}
                 <Header />
 
@@ -27,7 +26,7 @@ function BookingPage() {
 
                 {/* Booking Details */}
                 <main className="flex-grow p-4">
-                    <div className="bg-white rounded-lg shadow-md p-4">
+                    <div className="bg-white rounded-lg shadow-md p-4 max-w-lg mx-auto"> {/* ใช้ mx-auto เพื่อให้ตรงกลาง */}
                         <div className="flex items-center">
                             <img
                                 src="/car-image.png"
@@ -59,7 +58,7 @@ function BookingPage() {
                 </main>
 
                 {/* Footer */}
-                <Footer />
+                <Footer /> 
             </div>
         </Container>
     );
