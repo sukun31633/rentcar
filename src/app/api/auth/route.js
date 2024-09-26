@@ -1,7 +1,7 @@
 // src/app/api/auth/route.js
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import pool from "../../../../../lib/mysql"; // ใช้การเชื่อมต่อ MySQL
+import pool from '../../../../lib/mysql'; 
 import bcrypt from 'bcryptjs';
 
 const authOptions = {

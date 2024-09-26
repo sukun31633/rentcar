@@ -5,14 +5,45 @@ import { useRouter } from 'next/navigation';
 import Container from "../components/Container";
 
 function ForgotPasswordPage() {
-    const [phoneNumber, setPhoneNumber] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState(""); // state สำหรับเก็บหมายเลขโทรศัพท์
+    const [error, setError] = useState(""); // state สำหรับเก็บข้อความ error
+    const [success, setSuccess] = useState(""); // state สำหรับเก็บข้อความ success
     const router = useRouter();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Password reset requested for:", phoneNumber);
-        // Logic for handling password reset request
-        router.push('/reset-confirmation'); // Adjust as needed
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // ป้องกันการ reload หน้า
+
+        // ตรวจสอบว่าหมายเลขโทรศัพท์ไม่ว่างเปล่า
+        if (!phoneNumber) {
+            setError("กรุณากรอกหมายเลขโทรศัพท์");
+            return;
+        }
+
+        try {
+            // ส่งคำขอไปยัง API
+            const res = await fetch('/api/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ phoneNumber }), // ส่งหมายเลขโทรศัพท์ไปยัง API
+            });
+
+            if (res.ok) {
+                // ถ้าส่ง OTP สำเร็จ
+                setSuccess("รหัส OTP ถูกส่งไปยังโทรศัพท์ของคุณแล้ว");
+                setError(""); // เคลียร์ข้อความ error
+                router.push('/reset-confirmation'); // เปลี่ยนเส้นทางไปยังหน้า reset-confirmation
+            } else {
+                // ถ้าไม่พบผู้ใช้ที่มีหมายเลขนี้
+                setError("ไม่พบผู้ใช้ที่มีหมายเลขนี้");
+                setSuccess(""); // เคลียร์ข้อความ success
+            }
+        } catch (error) {
+            // เกิดข้อผิดพลาดในการเรียก API
+            setError("เกิดข้อผิดพลาดในการส่ง OTP");
+            setSuccess("");
+        }
     };
 
     return (
@@ -32,6 +63,10 @@ function ForgotPasswordPage() {
                 <main className="flex-grow p-4">
                     <div className="w-full max-w-md mx-auto bg-white shadow-md rounded-md p-6 mt-4">
                         <h2 className="text-xl font-bold text-gray-800 mb-4">ลืมรหัสผ่าน</h2>
+                        {/* แสดงข้อความ error หรือ success */}
+                        {error && <p className="text-red-500">{error}</p>}
+                        {success && <p className="text-green-500">{success}</p>}
+
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label htmlFor="phoneNumber" className="block text-gray-800 mb-1">
@@ -46,17 +81,17 @@ function ForgotPasswordPage() {
                                     placeholder="หมายเลขโทรศัพท์"
                                 />
                             </div>
+                            <button
+                                type="submit"
+                                className="w-full bg-blue-600 text-white py-3 rounded-full text-lg">
+                                ขอรหัสผ่าน
+                            </button>
                         </form>
                     </div>
                 </main>
 
                 {/* ปุ่มที่อยู่ล่างสุด */}
                 <footer className="p-4 bg-white shadow-t">
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-600 text-white py-3 rounded-full text-lg">
-                        ขอรหัสผ่าน
-                    </button>
                 </footer>
             </div>
         </Container>

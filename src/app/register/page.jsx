@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Container from "../components/Container";
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
@@ -11,7 +12,10 @@ function RegisterPage() {
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [password, setPassword] = useState(""); 
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState(""); // ฟิลด์ยืนยันรหัสผ่าน
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // ฟิลด์แสดง/ซ่อนยืนยันรหัสผ่าน
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
@@ -22,12 +26,36 @@ function RegisterPage() {
         if (session) router.replace('/login');
     }, [session, router]);
 
+    // ฟังก์ชันสำหรับสลับการแสดง/ซ่อนรหัสผ่าน
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
+    // ฟังก์ชันสำหรับสลับการแสดง/ซ่อนยืนยันรหัสผ่าน
+    const toggleConfirmPasswordVisibility = () => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
+
+    // การตรวจสอบและส่งข้อมูลไปยัง API
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         // ตรวจสอบให้แน่ใจว่าฟิลด์ทั้งหมดถูกกรอก
-        if (!firstName || !lastName || !email || !phone || !password) {
-            setError("Please complete all inputs.");
+        if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
+            setError("Please complete all fields.");
+            return;
+        }
+
+        // ตรวจสอบรูปแบบเบอร์โทรศัพท์
+        const phoneRegex = /^[0-9]{10}$/;
+        if (!phoneRegex.test(phone)) {
+            setError("Please enter a valid 10-digit phone number.");
+            return;
+        }
+
+        // ตรวจสอบว่ารหัสผ่านและการยืนยันรหัสผ่านตรงกันหรือไม่
+        if (password !== confirmPassword) {
+            setError("Passwords do not match.");
             return;
         }
 
@@ -38,11 +66,10 @@ function RegisterPage() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ phone }) // ใช้ phone ในการตรวจสอบ
+                body: JSON.stringify({ phone })
             });
 
             const { user } = await resCheckUser.json();
-
             if (user) {
                 setError("User already exists.");
                 return;
@@ -55,11 +82,11 @@ function RegisterPage() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    firstName, 
-                    lastName, 
-                    email, 
-                    phone, 
-                    password 
+                    firstName,
+                    lastName,
+                    email,
+                    phone,
+                    password
                 })
             });
 
@@ -67,7 +94,7 @@ function RegisterPage() {
             if (res.ok) {
                 setSuccess("User registration successful!");
                 setError("");
-                // นำผู้ใช้ไปยังหน้า welcome หรือหน้าอื่นที่ต้องการ
+                // นำผู้ใช้ไปยังหน้า login หลังจากลงทะเบียนสำเร็จ
                 router.replace('/login');
             } else {
                 setError("Registration failed.");
@@ -93,7 +120,6 @@ function RegisterPage() {
                     <div className="w-full max-w-md p-5 mt-5 bg-white shadow-md rounded-lg border">
                         <h4 className="text-lg font-semibold mb-4">ข้อมูลส่วนตัว</h4>
                         <form onSubmit={handleSubmit} className="space-y-4">
-
                             {error && (
                                 <div className="bg-red-500 text-white text-center py-2 rounded">
                                     {error}
@@ -154,16 +180,48 @@ function RegisterPage() {
                                 />
                             </div>
 
+                            {/* ฟิลด์รหัสผ่าน */}
                             <div>
                                 <label htmlFor="password" className="block text-gray-700 mb-1">รหัสผ่าน</label>
-                                <input
-                                    type="password"
-                                    id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full border border-gray-300 rounded px-3 py-2"
-                                    placeholder="รหัสผ่าน"
-                                />
+                                <div className="relative w-full">
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        id="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="w-full border border-gray-300 rounded px-3 py-2"
+                                        placeholder="รหัสผ่าน"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={togglePasswordVisibility}
+                                        className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                                    >
+                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* ฟิลด์ยืนยันรหัสผ่าน */}
+                            <div>
+                                <label htmlFor="confirmPassword" className="block text-gray-700 mb-1">ยืนยันรหัสผ่าน</label>
+                                <div className="relative w-full">
+                                    <input
+                                        type={showConfirmPassword ? 'text' : 'password'}
+                                        id="confirmPassword"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        className="w-full border border-gray-300 rounded px-3 py-2"
+                                        placeholder="ยืนยันรหัสผ่าน"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={toggleConfirmPasswordVisibility}
+                                        className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                                    >
+                                        {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="flex items-center space-x-2">

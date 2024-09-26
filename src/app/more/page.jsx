@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Header from '../components/Header';
@@ -10,6 +10,14 @@ import { FaUser, FaBell, FaLanguage, FaRegFileAlt, FaHeadset } from 'react-icons
 
 function MorePage() {
     const router = useRouter();
+    const [selectedLanguage, setSelectedLanguage] = useState('ไทย'); // ภาษาเริ่มต้น
+
+    useEffect(() => {
+        // ใช้ useEffect เพื่อเช็คว่าภาษาได้ถูกเปลี่ยนหรือไม่
+        // ในการทำจริง คุณอาจจะเก็บข้อมูลภาษาใน LocalStorage, Cookie หรือ state ของแอปพลิเคชัน
+        const savedLanguage = localStorage.getItem('selectedLanguage') || 'ไทย';
+        setSelectedLanguage(savedLanguage);
+    }, []);
 
     const handleLogout = () => {
         // Logic for logout (เช่น การล้าง session หรือ token)
@@ -20,7 +28,7 @@ function MorePage() {
     const menuItems = [
         { icon: <FaUser className="text-orange-500" />, text: "ข้อมูลของฉัน", link: "/profile" },
         { icon: <FaBell className="text-red-500" />, text: "การแจ้งเตือนของแอพ", link: "/notifications" },
-        { icon: <FaLanguage className="text-blue-500" />, text: "ภาษา / Language", extra: "ไทย", link: "/language" },
+        { icon: <FaLanguage className="text-blue-500" />, text: "ภาษา / Language", extra: selectedLanguage, link: "/language" },
         { icon: <FaRegFileAlt className="text-purple-500" />, text: "นโยบาย", link: "/policy" },
         { icon: <FaHeadset className="text-yellow-500" />, text: "ศูนย์ช่วยเหลือ", link: "/support" },
     ];
@@ -69,4 +77,3 @@ function MorePage() {
 }
 
 export default MorePage;
-
