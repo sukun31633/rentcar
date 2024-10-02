@@ -33,7 +33,7 @@ function LoginPage() {
             });
 
             if (res.error) {
-                setError("Invalid credentials");
+                setError("ข้อมูลรับรองไม่ถูกต้อง");
                 return;
             }
 
@@ -41,7 +41,7 @@ function LoginPage() {
 
         } catch (error) {
             console.error("Error during sign-in: ", error);
-            setError("An error occurred while signing in. Please try again.");
+            setError("เกิดข้อผิดพลาดขณะลงชื่อเข้าใช้ โปรดลองอีกครั้ง");
         }
     }
 

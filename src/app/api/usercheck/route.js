@@ -8,7 +8,7 @@ export async function POST(req) {
 
         // ตรวจสอบว่ามีการส่งเบอร์โทรมาหรือไม่
         if (!phone) {
-            return NextResponse.json({ message: "Phone number is required." }, { status: 400 });
+            return NextResponse.json({ message: "ต้องระบุหมายเลขโทรศัพท์" }, { status: 400 });
         }
 
         // ค้นหาผู้ใช้ในฐานข้อมูลด้วยเบอร์โทร
@@ -23,6 +23,6 @@ export async function POST(req) {
     } catch (error) {
         // จัดการกับข้อผิดพลาด
         console.error('Error checking user:', error);
-        return NextResponse.json({ message: "An error occurred while checking the user." }, { status: 500 });
+        return NextResponse.json({ message: "เกิดข้อผิดพลาดขณะตรวจสอบผู้ใช้" }, { status: 500 });
     }
 }

@@ -42,20 +42,20 @@ function RegisterPage() {
 
         // ตรวจสอบให้แน่ใจว่าฟิลด์ทั้งหมดถูกกรอก
         if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
-            setError("Please complete all fields.");
+            setError("กรุณากรอกข้อมูลให้ครบทุกช่อง");
             return;
         }
 
         // ตรวจสอบรูปแบบเบอร์โทรศัพท์
         const phoneRegex = /^[0-9]{10}$/;
         if (!phoneRegex.test(phone)) {
-            setError("Please enter a valid 10-digit phone number.");
+            setError("กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง 10 หลัก");
             return;
         }
 
         // ตรวจสอบว่ารหัสผ่านและการยืนยันรหัสผ่านตรงกันหรือไม่
         if (password !== confirmPassword) {
-            setError("Passwords do not match.");
+            setError("รหัสผ่านไม่ตรงกัน");
             return;
         }
 
@@ -71,7 +71,7 @@ function RegisterPage() {
 
             const { user } = await resCheckUser.json();
             if (user) {
-                setError("User already exists.");
+                setError("มีผู้ใช้อยู่แล้ว");
                 return;
             }
 
@@ -92,15 +92,15 @@ function RegisterPage() {
 
             // ตรวจสอบสถานะการตอบกลับจาก API
             if (res.ok) {
-                setSuccess("User registration successful!");
+                setSuccess("การลงทะเบียนผู้ใช้สำเร็จ!");
                 setError("");
                 // นำผู้ใช้ไปยังหน้า login หลังจากลงทะเบียนสำเร็จ
                 router.replace('/login');
             } else {
-                setError("Registration failed.");
+                setError("การลงทะเบียนล้มเหลว");
             }
         } catch (error) {
-            setError("An error occurred during registration.");
+            setError("เกิดข้อผิดพลาดระหว่างการลงทะเบียน");
         }
     };
 

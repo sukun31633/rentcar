@@ -18,11 +18,11 @@ export async function POST(req) {
         );
 
         // ส่ง response กลับพร้อมข้อความสำเร็จ
-        return NextResponse.json({ message: "User registered." }, { status: 201 });
+        return NextResponse.json({ message: "ลงทะเบียนผู้ใช้แล้ว" }, { status: 201 });
 
     } catch (error) {
         // จัดการข้อผิดพลาดที่เกิดขึ้นในกระบวนการลงทะเบียน
         console.error('Error registering user:', error);
-        return NextResponse.json({ message: "An error occurred while registering the user." }, { status: 500 });
+        return NextResponse.json({ message: "เกิดข้อผิดพลาดขณะลงทะเบียนผู้ใช้" }, { status: 500 });
     }
 }
