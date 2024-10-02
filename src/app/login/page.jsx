@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Container from "../components/Container";
 import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
@@ -13,20 +13,21 @@ function LoginPage() {
     const [error, setError] = useState("");
 
     const router = useRouter();
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
 
     useEffect(() => {
+        // ตรวจสอบ session หากมีอยู่ให้ทำการ sign out ก่อนเพื่อให้ผู้ใช้กรอกข้อมูลใหม่
         if (session) {
-            router.replace('/home'); // แก้ไขให้ไปที่หน้า Home
+            signOut({ redirect: false }); // ล้าง session เก่าทันทีที่เข้าสู่หน้า login
         }
-    }, [session, router]);
+    }, [session]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             const res = await signIn("credentials", {
-                phone, // ใช้ phone แทน username
+                phone, 
                 password, 
                 redirect: false
             });
@@ -36,7 +37,7 @@ function LoginPage() {
                 return;
             }
 
-            router.replace("/home"); // แก้ไขให้ไปที่หน้า Home
+            router.replace("/app"); // เปลี่ยนไปหน้า /app
 
         } catch (error) {
             console.error("Error during sign-in: ", error);
@@ -46,12 +47,10 @@ function LoginPage() {
 
     return (
         <Container>
-            {/* เพิ่มไล่สีพื้นหลังด้วย Tailwind CSS */}
             <div className='flex-grow bg-gradient-to-b from-blue-600 to-blue-900 flex justify-center items-center p-4'>
                 <div className='w-full max-w-xs bg-transparent'>
                     <h2 className='text-left text-xl font-bold text-white mb-4'>ล็อกอิน</h2>
                     <form onSubmit={handleSubmit} className='space-y-4'>
-
                         {error && (
                             <div className='bg-red-500 text-white text-center py-1 px-3 rounded-md'>
                                 {error}
@@ -118,7 +117,6 @@ function LoginPage() {
                             </button>
                         </div>
 
-                        {/* Register Button Styled as Other Social Buttons */}
                         <div className='mt-4'>
                             <Link href="/register">
                                 <button 

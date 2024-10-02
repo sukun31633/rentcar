@@ -1,4 +1,3 @@
-// src/app/api/usercheck/route.js
 import { NextResponse } from 'next/server';
 import pool from '../../../../lib/mysql'; // ใช้การเชื่อมต่อ MySQL
 
@@ -6,6 +5,11 @@ export async function POST(req) {
     try {
         // ดึงข้อมูลเบอร์โทรจากคำขอ
         const { phone } = await req.json();
+
+        // ตรวจสอบว่ามีการส่งเบอร์โทรมาหรือไม่
+        if (!phone) {
+            return NextResponse.json({ message: "Phone number is required." }, { status: 400 });
+        }
 
         // ค้นหาผู้ใช้ในฐานข้อมูลด้วยเบอร์โทร
         const [rows] = await pool.query('SELECT id FROM login WHERE phone = ?', [phone]);
