@@ -4,7 +4,7 @@ import Container from '../components/Container';
 import Header from '../components/Header'; // นำเข้า Header
 import Link from 'next/link'; // นำเข้า Link จาก Next.js
 
-function BookingPage() {
+function ReturnCarPage() {
     return (
         <Container>
             <div className="min-h-screen flex flex-col">
@@ -14,18 +14,18 @@ function BookingPage() {
                 {/* Tabs */}
                 <div className="bg-white shadow-md mt-4">
                     <div className="flex">
-                        <button className="flex-grow text-center py-2 border-b-4 border-blue-600">
-                            กำลังจะมาถึง
-                        </button>
-                        <Link href="/returncar">
+                        <Link href="/booking">
                             <button className="flex-grow text-center py-2 border-b-4 border-gray-200">
-                                คืนรถแล้ว/ยกเลิกการจอง
+                                กำลังจะมาถึง
                             </button>
                         </Link>
+                        <button className="flex-grow text-center py-2 border-b-4 border-blue-600">
+                            คืนรถแล้ว
+                        </button>
                     </div>
                 </div>
 
-                {/* Booking Details */}
+                {/* Return Car Details */}
                 <main className="flex-grow p-6">
                     <div className="bg-white rounded-lg shadow-md p-6 max-w-lg mx-auto">
                         <div className="flex items-center">
@@ -42,22 +42,18 @@ function BookingPage() {
 
                         <div className="mt-4">
                             <p className="text-gray-600">
-                                <strong>วันที่:</strong> 15/07/22 10:00 - 16/07/22 10:00
+                                <strong>คืนรถเมื่อ:</strong> 16/07/22 10:00
                             </p>
                             <p className="text-gray-600">
-                                <strong>สถานที่รับ-ส่งรถ:</strong> สถานที่จอง
+                                <strong>สถานที่คืนรถ:</strong> สถานที่จอง
                             </p>
                         </div>
 
                         <div className="mt-6 flex justify-between items-center">
-                            <span className="text-sm text-gray-500">ระยะเวลา: 1 วัน</span>
-                            
-                            {/* ปุ่มยกเลิกการจองเชื่อมโยงไปหน้า ReturnCarPage */}
-                            <Link href="/returncar">
-                                <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-                                    ยกเลิกการจอง
-                                </button>
-                            </Link>
+                            <span className="text-sm text-gray-500">ระยะเวลาการเช่า: 1 วัน</span>
+                            <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                                รายงานปัญหาการคืนรถ
+                            </button>
                         </div>
                     </div>
                 </main>
@@ -71,4 +67,4 @@ function BookingPage() {
     );
 }
 
-export default BookingPage;
+export default ReturnCarPage;
