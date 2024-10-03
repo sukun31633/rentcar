@@ -30,12 +30,12 @@ function BookingPage() {
                     <div className="bg-white rounded-lg shadow-md p-6 max-w-lg mx-auto">
                         <div className="flex items-center">
                             <img
-                                src="/car-image.png"
-                                alt="Mazda 2 2017"
+                                src="/image/mazda2.png"
+                                alt="Mazda 2 2021"
                                 className="w-24 h-24 rounded-md object-cover"
                             />
                             <div className="ml-4">
-                                <h2 className="text-lg font-bold text-gray-700">Mazda 2 2017</h2>
+                                <h2 className="text-lg font-bold text-gray-700">Mazda 2 2021</h2>
                                 <p className="text-gray-600">หมายเลขการจอง: <strong>0123456789</strong></p>
                             </div>
                         </div>
