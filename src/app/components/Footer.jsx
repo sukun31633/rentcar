@@ -9,37 +9,37 @@ function Footer() {
         {/* เมนูด้านข้าง */}
         <Link href="/app" className="text-sm text-center flex-1">
           <div className="flex flex-col items-center">
-            <FaHome className="h-6 w-6 mb-1" />
-            <span>หน้าแรก</span>
+            <FaHome className="h-6 w-6 mb-1 text-gray-600" /> {/* ปรับสีของไอคอน */}
+            <span className="text-gray-600">หน้าแรก</span>
           </div>
         </Link>
 
         <Link href="/booking" className="text-sm text-center flex-1">
           <div className="flex flex-col items-center">
-            <FaClipboardList className="h-6 w-6 mb-1" />
-            <span>การจอง</span>
+            <FaClipboardList className="h-6 w-6 mb-1 text-gray-600" /> {/* ปรับสีของไอคอน */}
+            <span className="text-gray-600">การจอง</span>
           </div>
         </Link>
 
         {/* ปุ่มค้นหารถเช่า */}
-        <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-blue-600 p-3 rounded-full shadow-lg flex items-center justify-center">
+        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 p-3 rounded-full shadow-lg flex items-center justify-center"> {/* ลอยขึ้นมาด้วย -top-10 */}
           <Link href="/search" className="text-white flex flex-col items-center">
-            <FaCar className="h-6 w-6 mb-1" /> {/* ไอคอนรถ */}
+            <FaCar className="h-6 w-6 mb-1" /> {/* ขนาดไอคอนรถ */}
             <span className="text-sm">ค้นหารถเช่า</span>
           </Link>
         </div>
 
         <Link href="/messages" className="text-sm text-center flex-1">
           <div className="flex flex-col items-center">
-            <FaEnvelope className="h-6 w-6 mb-1" />
-            <span>ข้อความ</span>
+            <FaEnvelope className="h-6 w-6 mb-1 text-gray-600" /> {/* ปรับสีของไอคอน */}
+            <span className="text-gray-600">ข้อความ</span>
           </div>
         </Link>
 
         <Link href="/more" className="text-sm text-center flex-1">
           <div className="flex flex-col items-center">
-            <FaUser className="h-6 w-6 mb-1" />
-            <span>อื่นๆ</span>
+            <FaUser className="h-6 w-6 mb-1 text-gray-600" /> {/* ปรับสีของไอคอน */}
+            <span className="text-gray-600">อื่นๆ</span>
           </div>
         </Link>
       </div>

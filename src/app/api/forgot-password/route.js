@@ -1,39 +1,47 @@
-import pool from '../../../../lib/mysql'; // นำเข้า pool จาก mysql.js
-import twilio from 'twilio'; // นำเข้า Twilio
+import { NextResponse } from 'next/server';
+import twilio from 'twilio';
+import pool from '../../../../lib/mysql'; // ใช้การเชื่อมต่อ MySQL
 
-// กำหนดค่า Twilio โดยใช้ Account SID และ Auth Token ของคุณ
-const accountSid = 'AC457e9fc76fb7b7da96fe7e8eead858a7';  // Account SID จาก Twilio Dashboard
-const authToken = '5d90eebf4a8cccd8509f78cbbd75a652';     // Auth Token จาก Twilio Dashboard
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
 
-// Named export สำหรับ POST method
-export async function POST(req, res) {
-    const { phoneNumber } = await req.json(); // ใช้ await เพื่อดึงข้อมูลจาก request
+export async function POST(req) {
+    const { phoneNumber } = await req.json(); // รับหมายเลขโทรศัพท์จากคำขอ
+
+    // ตรวจสอบและแปลงเบอร์โทรศัพท์ให้อยู่ในรูปแบบ E.164 สำหรับประเทศไทย
+    const formattedPhoneNumber = phoneNumber.startsWith('0')
+        ? `+66${phoneNumber.slice(1)}` // แปลง 099971XXXX -> +6699971XXXX
+        : phoneNumber;
+
+    // สร้างรหัส OTP แบบสุ่ม 6 หลัก
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    // กำหนดเวลาหมดอายุของ OTP (5 นาที)
+    const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // OTP หมดอายุใน 5 นาที
 
     try {
-        // Query ข้อมูลผู้ใช้จากฐานข้อมูลโดยใช้หมายเลขโทรศัพท์
-        const [rows] = await pool.query('SELECT * FROM login WHERE phone = ?', [phoneNumber]);
-
-        if (rows.length === 0) {
-            return new Response(JSON.stringify({ error: 'User not found' }), { status: 404 });
-        }
-
-        // สร้างรหัส OTP
-        const otp = Math.floor(100000 + Math.random() * 900000); // OTP 6 หลัก
-
-        // อัปเดตรหัส OTP ลงในฐานข้อมูล
-        await pool.query('UPDATE login SET otp = ? WHERE phone = ?', [otp, phoneNumber]);
-
-        // ส่ง OTP ไปยังหมายเลขโทรศัพท์ผู้ใช้ผ่าน Twilio
+        // ส่งรหัส OTP ไปยังหมายเลขโทรศัพท์ที่ผู้ใช้กรอก
         await client.messages.create({
-            body: `Your OTP for password reset is: ${otp}`,
-            from: '+19252483182', // หมายเลขโทรศัพท์ที่คุณได้จาก Twilio
-            to: +66999719451 // หมายเลขโทรศัพท์ของผู้ใช้
+            body: `Your OTP code is: ${otp}`,
+            from: process.env.TWILIO_PHONE_NUMBER, // เบอร์ที่ส่งจาก Twilio
+            to: formattedPhoneNumber, // ส่งไปยังหมายเลขโทรศัพท์ที่แปลงแล้ว
         });
 
-        return new Response(JSON.stringify({ success: true, message: 'OTP sent successfully' }), { status: 200 });
+        // บันทึก OTP และเวลาหมดอายุในฐานข้อมูล
+        const [result] = await pool.query(
+            'UPDATE login SET otp = ?, otp_expires_at = ? WHERE phone = ?',
+            [otp, otpExpiresAt, phoneNumber]
+        );
+
+        if (result.affectedRows === 0) {
+            return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Failed to send OTP:', error);
-        return new Response(JSON.stringify({ error: 'Failed to send OTP' }), { status: 500 });
+        console.error("Error sending OTP:", error);
+        return NextResponse.json({ success: false, error: "Failed to send OTP" }, { status: 500 });
     }
 }
+
