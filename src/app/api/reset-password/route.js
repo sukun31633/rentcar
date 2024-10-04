@@ -1,57 +1,43 @@
-import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import pool from '../../../../lib/mysql'; // เชื่อมต่อ MySQL
+import pool from '../../../../lib/mysql';  // การเชื่อมต่อฐานข้อมูล
 
 export async function POST(req) {
     try {
-        const { password, token } = await req.json(); // รับรหัสผ่านใหม่และ token จาก request body
+        const { phoneNumber, otp, password } = await req.json();  // รับ OTP, phoneNumber และ password จาก body
 
-        // เพิ่มการตรวจสอบ token และ password ที่ได้รับมา
-        console.log("Received Token:", token);
-        console.log("Received Password:", password);
-
-        if (!token) {
-            return NextResponse.json({ success: false, error: "Token is missing" }, { status: 400 });
+        if (!phoneNumber || !otp || !password) {
+            return new Response(JSON.stringify({ message: "ข้อมูลไม่ครบถ้วน" }), { status: 400 });
         }
 
-        // ตรวจสอบ JWT และดึงข้อมูลภายใน token เช่น หมายเลขโทรศัพท์
-        let decoded;
-        try {
-            decoded = jwt.verify(token, process.env.JWT_SECRET); // ตรวจสอบความถูกต้องของ token
-            console.log("Decoded Token:", decoded); // บันทึกข้อมูล token ที่ถอดรหัสได้
-        } catch (error) {
-            console.error("Error decoding token:", error);
-            return NextResponse.json({ success: false, error: "Invalid or expired token" }, { status: 400 });
+        // ดึงข้อมูล OTP จากฐานข้อมูล
+        const [user] = await pool.query('SELECT otp, otp_expires_at FROM login WHERE phone = ?', [phoneNumber]);
+
+        if (user.length === 0) {
+            return new Response(JSON.stringify({ message: "ไม่พบผู้ใช้" }), { status: 404 });
         }
 
-        // ตรวจสอบว่ามีหมายเลขโทรศัพท์อยู่ใน token หรือไม่
-        const phoneNumber = decoded.phoneNumber; 
-        if (!phoneNumber) {
-            return NextResponse.json({ success: false, error: "Phone number not found in token" }, { status: 400 });
+        const now = new Date();
+        const userOtp = user[0].otp;
+        const otpExpiresAt = new Date(user[0].otp_expires_at);
+
+        // ตรวจสอบว่า OTP ถูกต้องและยังไม่หมดอายุ
+        if (userOtp !== otp || now > otpExpiresAt) {
+            return new Response(JSON.stringify({ message: "OTP ไม่ถูกต้องหรือหมดอายุ" }), { status: 400 });
         }
 
-        console.log("Phone number found in token:", phoneNumber);
-
-        // เข้ารหัส (hash) รหัสผ่านใหม่
+        // แฮชรหัสผ่านใหม่ก่อนบันทึกลงฐานข้อมูล
         const hashedPassword = await bcrypt.hash(password, 10);
-        console.log("Hashed Password:", hashedPassword);
 
         // อัปเดตรหัสผ่านใหม่ในฐานข้อมูล
-        const [result] = await pool.query(
-            'UPDATE login SET password = ? WHERE phone = ?',
-            [hashedPassword, phoneNumber]
-        );
+        const [result] = await pool.query('UPDATE login SET password = ? WHERE phone = ?', [hashedPassword, phoneNumber]);
 
         if (result.affectedRows === 0) {
-            return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
+            return new Response(JSON.stringify({ message: "ไม่พบผู้ใช้" }), { status: 404 });
         }
 
-        console.log("Password updated successfully for phone number:", phoneNumber);
-
-        return NextResponse.json({ success: true });
+        return new Response(JSON.stringify({ message: "รีเซ็ตรหัสผ่านสำเร็จ" }), { status: 200 });
     } catch (error) {
-        console.error("Error updating password:", error); // บันทึกข้อผิดพลาดเพื่อการตรวจสอบ
-        return NextResponse.json({ success: false, error: "Failed to update password" }, { status: 500 });
+        console.error("Error resetting password:", error);
+        return new Response(JSON.stringify({ message: "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน" }), { status: 500 });
     }
 }

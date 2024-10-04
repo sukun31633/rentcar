@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 import pool from '../../../../lib/mysql'; // การเชื่อมต่อ MySQL
 
@@ -24,11 +23,9 @@ export async function POST(req) {
             return NextResponse.json({ success: false, error: "Invalid or expired OTP" }, { status: 400 });
         }
 
-        // สร้าง JWT ที่เก็บเบอร์โทรศัพท์
-        const token = jwt.sign({ phoneNumber }, process.env.JWT_SECRET, { expiresIn: '15m' }); // JWT หมดอายุใน 15 นาที
-
-        // ส่ง JWT กลับไปยัง frontend
-        return NextResponse.json({ success: true, token });
+        // OTP ถูกต้องและยังไม่หมดอายุ
+        // ตอนนี้ไม่มีการสร้าง JWT ให้ไปที่หน้ารีเซ็ตรหัสผ่านเลย
+        return NextResponse.json({ success: true, message: "OTP verified" });
     } catch (error) {
         console.error("Error verifying OTP:", error);
         return NextResponse.json({ success: false, error: "Failed to verify OTP" }, { status: 500 });
