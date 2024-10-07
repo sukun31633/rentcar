@@ -39,7 +39,7 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-4">
             <CarCard name="Mazda 2" year="2020" imageSrc="/image/cmazda2.png" />
             <CarCard name="Toyota Vios" year="2018" imageSrc="/image/ctoyota.png" />
-            <CarCard name="Honda civic fl15" year="2024" imageSrc="/image/chonda.png" />
+            <CarCard name="Honda civic fl5" year="2024" imageSrc="/image/chonda.png" />
           </div>
         </section>
 
@@ -59,10 +59,10 @@ export default function Home() {
         <section className="p-4 w-full">
           <h2 className="text-2xl font-bold mb-4">กิจกรรมพิเศษ</h2>
           <div className="grid grid-cols-2 gap-4">
-            <PromotionCard title="ลดราคาเหลือ 10000 ฿/hrs." imageSrc= "/image/honda.png" />
-            <PromotionCard title="ลดราคาเหลือ 1000 ฿/hrs." imageSrc= "/image/mazda2.png" />
-            <PromotionCard title="ลดราคาเหลือ 1800 ฿/hrs." imageSrc="/image/mazda3.png" />
-            <PromotionCard title="ลดราคาเหลือ 500 ฿/hrs." imageSrc= "/image/toyota.png" />
+            <PromotionCard title="ลดราคาเหลือ 10000 ฿/day" imageSrc= "/image/honda.png" />
+            <PromotionCard title="ลดราคาเหลือ 1000 ฿/day" imageSrc= "/image/mazda2.png" />
+            <PromotionCard title="ลดราคาเหลือ 1800 ฿/day" imageSrc="/image/mazda3.png" />
+            <PromotionCard title="ลดราคาเหลือ 500 ฿/day" imageSrc= "/image/toyota.png" />
           </div>
         </section>
 
