@@ -20,6 +20,7 @@ function AdminPage() {
     name: '',
     model: '',
     year: '',
+    transmission: '', // เพิ่มฟิลด์ข้อมูลเกียร์
     rentalPrice: '',
     passengerCapacity: '',
     luggageCapacity: '',
@@ -86,6 +87,22 @@ function AdminPage() {
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="กรอกปีของรถ"
             />
+          </div>
+
+          {/* ฟิลด์ เกียร์ */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">เกียร์:</label>
+            <select
+              name="transmission"
+              value={carDetails.transmission}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">เลือกเกียร์</option>
+              <option value="อัตโนมัติ">อัตโนมัติ</option>
+              <option value="ธรรมดา">ธรรมดา</option>
+            </select>
           </div>
 
           {/* ฟิลด์ ราคาเช่าต่อวัน */}
