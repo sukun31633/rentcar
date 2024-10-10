@@ -61,7 +61,12 @@ function DataCar() {
                     <p className="text-lg font-semibold">ชื่อ: {car.name || 'กรุณาใส่ข้อมูล'}</p>
                     <p>รุ่น: {car.model || 'กรุณาใส่ข้อมูล'}</p>
                     <p>ปี: {car.year || 'กรุณาใส่ข้อมูล'}</p>
-                    <p>เกียร์: {car.transmission || 'กรุณาใส่ข้อมูล'}</p> {/* เปลี่ยนเป็นการแสดงข้อมูลเกียร์ */}
+                    <p>เกียร์: {car.transmission || 'กรุณาใส่ข้อมูล'}</p>
+                    <p>ราคาเช่าต่อวัน: {car.rental_price || 'กรุณาใส่ข้อมูล'} บาท</p>
+                    <p>จำนวนที่นั่ง: {car.passenger_capacity || 'กรุณาใส่ข้อมูล'}</p>
+                    <p>ความจุกระเป๋า: {car.luggage_capacity || 'กรุณาใส่ข้อมูล'} กระเป๋า</p>
+                    <p>อุปกรณ์ภายในรถ: {car.features || 'กรุณาใส่ข้อมูล'}</p>
+                    <p>จังหวัด: {car.province || 'กรุณาใส่ข้อมูล'}</p>
                   </div>
                 </div>
               ))

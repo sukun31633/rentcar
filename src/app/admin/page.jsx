@@ -21,11 +21,12 @@ function AdminPage() {
     name: '',
     model: '',
     year: '',
-    transmission: '', // เพิ่มฟิลด์ข้อมูลเกียร์
+    transmission: '',
     rentalPrice: '',
     passengerCapacity: '',
     luggageCapacity: '',
     features: '',
+    province: '', // เพิ่มฟิลด์ข้อมูลจังหวัด
     image: '', // แทนที่การอัปโหลดด้วยการเลือกจากตัวเลือก
   });
 
@@ -57,6 +58,7 @@ function AdminPage() {
           passengerCapacity: '',
           luggageCapacity: '',
           features: '',
+          province: '',
           image: ''
         });
       } else {
@@ -143,6 +145,26 @@ function AdminPage() {
             </select>
           </div>
 
+          {/* ฟิลด์ จังหวัด */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">จังหวัด:</label>
+            <select
+              name="province"
+              value={carDetails.province}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">เลือกจังหวัด</option>
+              <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option>
+              <option value="เชียงใหม่">เชียงใหม่</option>
+              <option value="ภูเก็ต">ภูเก็ต</option>
+              <option value="ขอนแก่น">ขอนแก่น</option>
+              <option value="นครราชสีมา">นครราชสีมา</option>
+              {/* เพิ่มจังหวัดอื่นๆ ที่ต้องการ */}
+            </select>
+          </div>
+
           {/* ฟิลด์ ราคาเช่าต่อวัน */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">ราคาเช่าต่อวัน:</label>
@@ -209,10 +231,10 @@ function AdminPage() {
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">เลือกรูปภาพ</option>
-              <option value="chonda.png">Honda</option>
+              <option value="chonda.png">Honda fl5</option>
               <option value="cmazda2.png">Mazda 2</option>
               <option value="cmazda3.png">Mazda 3</option>
-              <option value="ctoyota.png">Toyota</option>
+              <option value="ctoyota.png">Toyota altis</option>
             </select>
           </div>
 
