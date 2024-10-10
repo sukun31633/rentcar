@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'; // ใช้ next/navigation แท
 function AdminPage() {
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [message, setMessage] = useState({ type: '', content: '' });
 
   useEffect(() => {
     const userRole = "admin"; // ตัวอย่าง role ของ user
@@ -25,7 +26,7 @@ function AdminPage() {
     passengerCapacity: '',
     luggageCapacity: '',
     features: '',
-    image: null,
+    image: '', // แทนที่การอัปโหลดด้วยการเลือกจากตัวเลือก
   });
 
   const handleChange = (e) => {
@@ -33,19 +34,56 @@ function AdminPage() {
     setCarDetails({ ...carDetails, [name]: value });
   };
 
-  const handleImageUpload = (e) => {
-    setCarDetails({ ...carDetails, image: URL.createObjectURL(e.target.files[0]) });
-  };
-
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    console.log(carDetails);
+    try {
+      // ส่งข้อมูลไปยัง backend (ปรับ endpoint ตามจริง)
+      const res = await fetch('/api/save-car', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(carDetails),
+      });
+
+      if (res.ok) {
+        setMessage({ type: 'success', content: 'บันทึกข้อมูลสำเร็จ!' });
+
+        // รีเซ็ตฟอร์มให้กลับเป็นค่าว่าง
+        setCarDetails({
+          name: '',
+          model: '',
+          year: '',
+          transmission: '',
+          rentalPrice: '',
+          passengerCapacity: '',
+          luggageCapacity: '',
+          features: '',
+          image: ''
+        });
+      } else {
+        setMessage({ type: 'error', content: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', content: 'เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์' });
+    }
+
+    // ตั้งให้ข้อความแจ้งเตือนหายไปหลังจาก 3 วินาที
+    setTimeout(() => {
+      setMessage({ type: '', content: '' });
+    }, 3000);
   };
 
   return isAdmin ? (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-700">เพิ่มข้อมูลรถ</h1>
+
+        {/* การแจ้งเตือน */}
+        {message.content && (
+          <div className={`mb-4 p-4 rounded-md ${message.type === 'success' ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'}`}>
+            {message.content}
+          </div>
+        )}
+
         <form onSubmit={handleSave}>
           {/* ฟิลด์ ชื่อรถ */}
           <div className="mb-4">
@@ -160,17 +198,35 @@ function AdminPage() {
             />
           </div>
 
-          {/* ฟิลด์ อัปโหลดรูปภาพ */}
+          {/* ฟิลด์ เลือกรูปภาพ */}
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">อัปโหลดรูปภาพ:</label>
-            <input 
-              type="file" 
-              onChange={handleImageUpload} 
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-md file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              multiple  // รองรับอัปโหลดหลายรูป
-            />
-            {carDetails.image && <img src={carDetails.image} alt="car" className="mt-4 w-32 h-32 object-cover rounded-md" />}
+            <label className="block text-gray-700 text-sm font-bold mb-2">เลือกรูปภาพรถ:</label>
+            <select
+              name="image"
+              value={carDetails.image}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">เลือกรูปภาพ</option>
+              <option value="chonda.png">Honda</option>
+              <option value="cmazda2.png">Mazda 2</option>
+              <option value="cmazda3.png">Mazda 3</option>
+              <option value="ctoyota.png">Toyota</option>
+            </select>
           </div>
+
+          {/* แสดงภาพตัวอย่าง */}
+          {carDetails.image && (
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">ภาพตัวอย่าง:</label>
+              <img 
+                src={`/image/${carDetails.image}`}  // ใช้เส้นทาง /image/ ที่ถูกต้อง
+                alt="Car" 
+                className="w-32 h-32 object-cover rounded-md"
+              />
+            </div>
+          )}
 
           <div className="flex justify-between items-center">
             <button 
@@ -178,6 +234,15 @@ function AdminPage() {
               className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               บันทึก
+            </button>
+
+            {/* ปุ่มไปยังหน้า DataCar */}
+            <button 
+              type="button" 
+              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+              onClick={() => router.push('/datacar')} // นำไปยังหน้า DataCar
+            >
+              ดูข้อมูลรถ
             </button>
           </div>
         </form>

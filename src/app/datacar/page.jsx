@@ -1,19 +1,29 @@
 "use client"; // บอก Next.js ว่านี่คือ Client Component
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // ใช้ next/navigation แทน next/router
 import Header from '../components/Header';  // นำเข้า Header
 import Container from '../components/Container'; // นำเข้า Container
 import Carousel from '../components/Carousel'; // นำเข้า Carousel
-import Footer from '../components/Footer'; // นำเข้า Footer (ถ้ามี)
 
 function DataCar() {
-  const carData = [
-    { id: 1, name: '', model: '', year: '', details: '', image: '/image/placeholder.png' },
-    { id: 2, name: '', model: '', year: '', details: '', image: '/image/placeholder.png' },
-    { id: 3, name: '', model: '', year: '', details: '', image: '/image/placeholder.png' },
-    { id: 4, name: '', model: '', year: '', details: '', image: '/image/placeholder.png' },
-    { id: 5, name: '', model: '', year: '', details: '', image: '/image/placeholder.png' }
-  ];
+  const router = useRouter();
+  const [carData, setCarData] = useState([]);
+
+  // ฟังก์ชันเพื่อดึงข้อมูลจาก API
+  const fetchCars = async () => {
+    try {
+      const res = await fetch('/api/get-cars'); // เรียก API ที่สร้าง
+      const data = await res.json(); // เปลี่ยนข้อมูลจาก JSON ให้เป็น array
+      setCarData(data); // เก็บข้อมูลใน state
+    } catch (error) {
+      console.error('Error fetching cars data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCars(); // เรียกฟังก์ชันดึงข้อมูลเมื่อโหลดหน้า component
+  }, []);
 
   return (
     <Container>
@@ -28,24 +38,36 @@ function DataCar() {
 
         {/* เนื้อหากลาง - ช่องข้อมูลรถ */}
         <section className="w-full p-4">
-          <h2 className="text-2xl font-bold mb-4">ข้อมูลรถ</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">ข้อมูลรถ</h2>
+
+            {/* ปุ่มไปยังหน้า AdminPage */}
+            <button
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={() => router.push('/admin')}
+            >
+              เพิ่มข้อมูลรถ
+            </button>
+          </div>
+
           <div className="grid grid-cols-1 gap-6">
-            {carData.map((car) => (
-              <div key={car.id} className="bg-gray-200 p-4 rounded-lg flex items-center shadow-md">
-                <img src={car.image} alt="Placeholder" className="w-32 h-32 object-cover rounded-md mr-4" />
-                <div>
-                  <p className="text-lg font-semibold">ชื่อ: {car.name || 'กรุณาใส่ข้อมูล'}</p>
-                  <p>รุ่น: {car.model || 'กรุณาใส่ข้อมูล'}</p>
-                  <p>ปี: {car.year || 'กรุณาใส่ข้อมูล'}</p>
-                  <p>รายละเอียด: {car.details || 'กรุณาใส่ข้อมูล'}</p>
+            {carData.length === 0 ? (
+              <p className="text-center">กำลังโหลดข้อมูล...</p> // ข้อความแจ้งเมื่อข้อมูลยังไม่ถูกโหลด
+            ) : (
+              carData.map((car) => (
+                <div key={car.id} className="bg-gray-200 p-4 rounded-lg flex items-center shadow-md">
+                  <img src={`/image/${car.image}`} alt={car.name} className="w-32 h-32 object-cover rounded-md mr-4" />
+                  <div>
+                    <p className="text-lg font-semibold">ชื่อ: {car.name || 'กรุณาใส่ข้อมูล'}</p>
+                    <p>รุ่น: {car.model || 'กรุณาใส่ข้อมูล'}</p>
+                    <p>ปี: {car.year || 'กรุณาใส่ข้อมูล'}</p>
+                    <p>เกียร์: {car.transmission || 'กรุณาใส่ข้อมูล'}</p> {/* เปลี่ยนเป็นการแสดงข้อมูลเกียร์ */}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </section>
-
-        {/* Footer (ถ้ามี) */}
-        <Footer />
       </div>
     </Container>
   );
