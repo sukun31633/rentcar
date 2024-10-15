@@ -222,6 +222,7 @@ function AdminPage() {
 
           {/* ฟิลด์ เลือกรูปภาพ */}
           <div className="mb-4">
+<<<<<<< HEAD
             <label className="block text-gray-700 text-sm font-bold mb-2">เลือกรูปภาพรถ:</label>
             <select
               name="image"
@@ -236,6 +237,15 @@ function AdminPage() {
               <option value="cmazda3.png">Mazda 3</option>
               <option value="ctoyota.png">Toyota altis</option>
             </select>
+=======
+            <label className="block text-gray-700 text-sm font-bold mb-2">อัปโหลดรูปภาพ:</label>
+            <input 
+              type="file" 
+              onChange={handleImageUpload} 
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-md file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            />
+            {carDetails.image && <img src={carDetails.image} alt="car" className="mt-4 w-32 h-32 object-cover rounded-md" />}
+>>>>>>> a5f73163ce99ca9eb31f4faaaebb9de83eead620
           </div>
 
           {/* แสดงภาพตัวอย่าง */}

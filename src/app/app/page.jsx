@@ -1,11 +1,11 @@
 import React from 'react';
-import Header from '../components/Header'; // เปลี่ยนจาก Navbar เป็น Header
+import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Carousel from '../components/Carousel';
 import CarCard from '../components/CarCard';
 import DestinationCard from '../components/DestinationCard';
 import PromotionCard from '../components/PromotionCard';
-import Container from '../components/Container'; // ตรวจสอบการ import ว่าอยู่ที่ถูกต้อง
+import Container from '../components/Container';
 
 export const metadata = {
   title: 'หน้าแรก | Rent A Car',
@@ -15,8 +15,9 @@ export const metadata = {
 export default function Home() {
   return (
     <Container>
+      {/* Ensure full background covers the entire page */}
       <main className="bg-gray-100 min-h-screen flex flex-col items-center w-full">
-        {/* ใช้ Header แทน Navbar */}
+        {/* Header section */}
         <Header />
 
         {/* Carousel Section */}
@@ -59,10 +60,10 @@ export default function Home() {
         <section className="p-4 w-full">
           <h2 className="text-2xl font-bold mb-4">กิจกรรมพิเศษ</h2>
           <div className="grid grid-cols-2 gap-4">
-            <PromotionCard title="ลดราคาเหลือ 10000 ฿/day" imageSrc= "/image/honda.png" />
-            <PromotionCard title="ลดราคาเหลือ 1000 ฿/day" imageSrc= "/image/mazda2.png" />
+            <PromotionCard title="ลดราคาเหลือ 10000 ฿/day" imageSrc="/image/honda.png" />
+            <PromotionCard title="ลดราคาเหลือ 1000 ฿/day" imageSrc="/image/mazda2.png" />
             <PromotionCard title="ลดราคาเหลือ 1800 ฿/day" imageSrc="/image/mazda3.png" />
-            <PromotionCard title="ลดราคาเหลือ 500 ฿/day" imageSrc= "/image/toyota.png" />
+            <PromotionCard title="ลดราคาเหลือ 500 ฿/day" imageSrc="/image/toyota.png" />
           </div>
         </section>
 
