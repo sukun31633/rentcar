@@ -13,7 +13,17 @@ function SearchPage() {
     const [endTime, setEndTime] = useState('10:00');
 
     const handleSearch = () => {
-        console.log('ค้นหา:', location, startDate, endDate, startTime, endTime);
+        // สร้าง query string โดยส่งข้อมูลที่กรอกไป
+        const query = new URLSearchParams({
+            location,
+            startDate,
+            endDate,
+            startTime,
+            endTime
+        }).toString();
+
+        // นำทางไปยังหน้า search-results พร้อม query string
+        router.push(`/search-results?${query}`);
     };
 
     const handleBack = () => {
@@ -21,17 +31,7 @@ function SearchPage() {
     };
 
     const provinces = [
-        "กรุงเทพมหานคร", "กระบี่", "กาญจนบุรี", "กาฬสินธุ์", "กำแพงเพชร", "ขอนแก่น", "จันทบุรี",
-        "ฉะเชิงเทรา", "ชลบุรี", "ชัยนาท", "ชัยภูมิ", "ชุมพร", "เชียงใหม่", "เชียงราย", "ตรัง",
-        "ตราด", "ตาก", "นครนายก", "นครปฐม", "นครพนม", "นครราชสีมา", "นครศรีธรรมราช", "นครสวรรค์",
-        "นนทบุรี", "นราธิวาส", "น่าน", "บึงกาฬ", "บุรีรัมย์", "ปทุมธานี", "ประจวบคีรีขันธ์", 
-        "ปราจีนบุรี", "ปัตตานี", "พระนครศรีอยุธยา", "พะเยา", "พังงา", "พัทลุง", "พิจิตร", "พิษณุโลก", 
-        "เพชรบุรี", "เพชรบูรณ์", "แพร่", "ภูเก็ต", "มหาสารคาม", "มุกดาหาร", "แม่ฮ่องสอน", "ยโสธร", 
-        "ยะลา", "ร้อยเอ็ด", "ระนอง", "ระยอง", "ราชบุรี", "ลพบุรี", "ลำปาง", "ลำพูน", "เลย", 
-        "ศรีสะเกษ", "สกลนคร", "สงขลา", "สตูล", "สมุทรปราการ", "สมุทรสงคราม", "สมุทรสาคร", 
-        "สระแก้ว", "สระบุรี", "สิงห์บุรี", "สุโขทัย", "สุพรรณบุรี", "สุราษฎร์ธานี", "สุรินทร์", 
-        "หนองคาย", "หนองบัวลำภู", "อ่างทอง", "อุดรธานี", "อุทัยธานี", "อุตรดิตถ์", "อุบลราชธานี", 
-        "อำนาจเจริญ"
+        "กรุงเทพมหานคร",  "ขอนแก่น", "เชียงใหม่", "นครราชสีมา",  "ภูเก็ต"
     ];
 
     return (
@@ -63,7 +63,7 @@ function SearchPage() {
                     <span className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500">&#x25BC;</span>
                 </div>
 
-                {/* กรอบวันที่รับและวันที่คืนในกรอบเดียวกัน */}
+                {/* กรอบวันที่รับและวันที่คืน */}
                 <div className="border rounded shadow-sm p-4 flex items-center justify-between">
                     <div className="flex-1 flex flex-col items-center">
                         <label className="text-sm text-gray-500 mb-1 flex items-center gap-2">
@@ -90,7 +90,7 @@ function SearchPage() {
                     </div>
                 </div>
 
-                {/* กรอบเวลารับและเวลาคืนในกรอบเดียวกัน */}
+                {/* กรอบเวลารับและเวลาคืน */}
                 <div className="border rounded shadow-sm p-4 flex items-center justify-between">
                     <div className="flex-1 flex flex-col items-center">
                         <label className="text-sm text-gray-500 mb-1 flex items-center gap-2">
