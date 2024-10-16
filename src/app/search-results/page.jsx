@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation'; // ดึง useSearchParams เพื่อใช้ดึงข้อมูลจาก query
-import { FaArrowLeft, FaFilter } from 'react-icons/fa'; // ใช้ icon
+import { useRouter, useSearchParams } from 'next/navigation'; 
+import { FaArrowLeft, FaFilter } from 'react-icons/fa'; 
 
 function SearchResultsPage() {
   const router = useRouter();
-  const searchParams = useSearchParams(); // ใช้ดึง query string
+  const searchParams = useSearchParams(); 
   const [carData, setCarData] = useState([]);
 
   // ดึงข้อมูลจาก query string
@@ -63,7 +63,7 @@ function SearchResultsPage() {
         {/* ปุ่มตัวเลือก 'รถทั้งหมด' */}
         <div className="mt-2">
           <button className="bg-blue-500 text-white py-2 px-4 rounded-md">
-            รถทั้งหมด
+            รถเช่าแนะนำ
           </button>
         </div>
       </header>
@@ -76,11 +76,9 @@ function SearchResultsPage() {
           carData.map((car) => (
             <div key={car.id} className="bg-white rounded-lg shadow p-4 flex relative">
               {/* Badge ส่วนลด */}
-              {car.discount && (
-                <div className="absolute top-0 left-0 bg-orange-500 text-white px-3 py-1 rounded-tr-lg rounded-br-lg">
-                  ลด {car.discount}%
-                </div>
-              )}
+              <div className="absolute top-0 left-0 bg-orange-500 text-white px-3 py-1 rounded-tr-lg rounded-br-lg">
+                ลด 50%
+              </div>
               
               {/* รูปภาพรถ */}
               <div className="w-1/3">
@@ -92,21 +90,25 @@ function SearchResultsPage() {
                 <h2 className="text-lg font-semibold">{car.name || 'ไม่ระบุชื่อ'}</h2>
                 <p className="text-sm text-gray-500">รุ่น: {car.model}</p>
                 <p className="text-sm text-gray-500">เกียร์: {car.transmission}</p>
-                <p className="text-sm text-gray-500">ที่นั่ง: {car.passengerCapacity}</p>
+                <p className="text-sm text-gray-500">ที่นั่ง: {car.passenger_capacity}</p>
                 <p className="text-sm text-gray-500">จังหวัด: {car.province}</p>
 
-                {/* ราคาและปุ่มดูรายละเอียด */}
-                <div className="flex justify-between items-center mt-2">
-                  <p className="text-green-600 font-semibold">
-                    {car.rentalPrice} บาท/วัน
-                  </p>
-                  <button
-                    className="mt-2 bg-blue-500 text-white py-1 px-4 rounded-md"
-                    onClick={() => router.push(`/car-details/${car.id}`)}
-                  >
-                    ดูรายละเอียด
-                  </button>
+                {/* ราคาเต็มและราคาหลังลด */}
+                <div className="flex flex-col mt-2">
+                  <div className="text-gray-400 line-through">
+                    {car.rental_price ? `${car.rental_price} บาท/วัน` : 'ไม่ระบุราคา'}
+                  </div>
+                  <div className="text-green-600 font-semibold">
+                    {car.rental_price ? `${Math.floor(car.rental_price * 0.5)} บาท/วัน` : 'ไม่ระบุราคา'}
+                  </div>
                 </div>
+
+                <button
+                  className="mt-2 bg-blue-500 text-white py-1 px-4 rounded-md"
+                  onClick={() => router.push(`/car-details/${car.id}`)}
+                >
+                  ดูรายละเอียด
+                </button>
               </div>
             </div>
           ))
