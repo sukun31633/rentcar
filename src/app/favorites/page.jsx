@@ -1,75 +1,117 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaArrowLeft, FaThumbsUp, FaHeart, FaUser } from 'react-icons/fa';
+import { FaArrowLeft, FaHeart, FaRegHeart } from 'react-icons/fa';
 
 function CarListPage() {
   const router = useRouter();
+  const [favoriteCars, setFavoriteCars] = useState([]);
 
-  const handleBack = () => {
-    router.back();
+  // ดึงข้อมูลรายการโปรดจาก API
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const res = await fetch('/api/favorites');
+        const data = await res.json();
+        setFavoriteCars(data);
+      } catch (error) {
+        console.error('Error fetching favorite cars:', error);
+      }
+    };
+
+    fetchFavorites();
+  }, []);
+
+  // ฟังก์ชัน toggleFavorite สำหรับลบรถจากรายการโปรด
+  const toggleFavorite = async (carId) => {
+    try {
+      const res = await fetch('/api/favorites/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ car_id: carId })
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        setFavoriteCars(prevCars =>
+          prevCars.filter(car => car.id !== carId) // ลบรถออกจากรายการโปรดใน state
+        );
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
   };
 
-  const cars = [
-    {
-      id: 1,
-      name: "Mazda 2 2017",
-      image: "/image/cmazda2.png",
-      price: "1,999",
-      discount: "48%",
-      services: [
-        "บริการรับส่งสนามบิน",
-        "ขับฟรีในพื้นที่",
-        "ไม่ต้องใช้บัตรเครดิต"
-      ],
-      rating: 4.5,
-      reviews: 123,
-      likes: 2,
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
-      <header className="w-full max-w-md bg-white shadow p-4 flex items-center justify-between mx-auto">
-        <button onClick={handleBack} className="text-gray-600">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
+      <header className="w-full max-w-md bg-white shadow p-4 flex items-center justify-between">
+        <button onClick={() => router.back()} className="text-gray-600">
           <FaArrowLeft />
         </button>
-        <h1 className="text-center text-lg font-semibold flex-grow">
-          รายการโปรด
-        </h1>
+        <h1 className="text-center text-lg font-semibold flex-grow">รายการโปรด</h1>
       </header>
 
-      <main className="flex-grow w-full max-w-md p-4 mx-auto">
-        {cars.map(car => (
-          <div key={car.id} className="bg-white shadow-md rounded-md overflow-hidden mb-4 flex">
-            <div className="relative w-1/3">
-              <img src={car.image} alt={car.name} className="w-full h-full object-cover" />
-              <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
-                ลด {car.discount}
+      <main className="flex-grow w-full max-w-md p-4">
+        {favoriteCars.length === 0 ? (
+          <p className="text-center">ไม่มีรายการโปรด</p>
+        ) : (
+          favoriteCars.map((car) => (
+            <div key={car.id} className="bg-white rounded-lg shadow p-4 flex relative mb-4">
+              {/* Badge ส่วนลด */}
+              <div className="absolute top-0 left-0 bg-orange-500 text-white px-3 py-1 rounded-tr-lg rounded-br-lg">
+                ลด 50%
               </div>
-            </div>
-            <div className="w-2/3 p-4 flex flex-col justify-between">
-              <div>
-                <h2 className="text-xl font-bold">{car.name}</h2>
-                <div className="flex items-center text-sm text-gray-600">
-                  <span className="flex items-center mr-2"><FaUser className="mr-1" />{car.rating} คะแนน</span>
-                  <span className="flex items-center mr-2"><FaThumbsUp className="mr-1" />{car.likes}</span>
-                  <span className="flex items-center"><FaHeart className="mr-1" />{car.reviews}</span>
+
+              {/* รูปภาพรถ */}
+              <div className="w-1/3">
+                <img src={`/image/${car.image}`} alt={car.name} className="w-full h-32 object-cover rounded-lg" />
+              </div>
+
+              {/* ข้อมูลรถ */}
+              <div className="w-2/3 pl-4 relative">
+                {/* ไอคอนหัวใจ สำหรับลบจากรายการโปรด */}
+                <button
+                  className="absolute top-0 right-0 text-gray-500"
+                  onClick={() => toggleFavorite(car.id)}
+                >
+                  <FaHeart className="text-red-500" size={24} />
+                </button>
+
+                <h2 className="text-lg font-semibold">
+                  {car.name || 'ไม่ระบุชื่อ'} {car.year && `(${car.year})`}
+                </h2>
+                <p className="text-sm text-gray-500">รุ่น: {car.model}</p>
+                <p className="text-sm text-gray-500">เกียร์: {car.transmission}</p>
+                <p className="text-sm text-gray-500">ที่นั่ง: {car.passenger_capacity}</p>
+                <p className="text-sm text-gray-500">จังหวัด: {car.province}</p>
+
+                {/* ข้อมูลเจ้าของรถ */}
+                <div className="flex items-center mt-2">
+                  <img src={`/image/${car.owner_image}`} alt="Owner" className="w-8 h-8 rounded-full object-cover mr-2" />
+                  <p className="text-sm text-gray-500">ผู้ลงชื่อ: {car.owner_name || 'ไม่ระบุ'}</p>
                 </div>
-                <ul className="mt-2 space-y-1 text-sm text-gray-700">
-                  {car.services.map((service, index) => (
-                    <li key={index}>• {service}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-lg font-bold text-blue-600">{car.price} บาท/วัน</span>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded">ดูรายละเอียด</button>
+
+                {/* ราคาเต็มและราคาหลังลด */}
+                <div className="flex flex-col mt-2">
+                  <div className="text-gray-400 line-through">
+                    {car.rental_price ? `${car.rental_price} บาท/วัน` : 'ไม่ระบุราคา'}
+                  </div>
+                  <div className="text-green-600 font-semibold">
+                    {car.rental_price ? `${Math.floor(car.rental_price * 0.5)} บาท/วัน` : 'ไม่ระบุราคา'}
+                  </div>
+                </div>
+
+                <button
+                  className="mt-2 bg-blue-500 text-white py-1 px-4 rounded-md"
+                  onClick={() => router.push(`/car-details/${car.id}`)}
+                >
+                  ดูรายละเอียด
+                </button>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </main>
     </div>
   );

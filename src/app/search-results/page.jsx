@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation'; 
-import { FaArrowLeft, FaFilter } from 'react-icons/fa'; 
+import { FaArrowLeft, FaFilter, FaHeart, FaRegHeart } from 'react-icons/fa'; 
 
 function SearchResultsPage() {
   const router = useRouter();
   const searchParams = useSearchParams(); 
   const [carData, setCarData] = useState([]);
+  const [favorites, setFavorites] = useState([]);  // เก็บข้อมูลรถที่ถูกบันทึกเป็น Favorite
 
   // ดึงข้อมูลจาก query string
   const location = searchParams.get('location');
@@ -21,18 +22,50 @@ function SearchResultsPage() {
     try {
       const res = await fetch(`/api/get-cars`); // ดึงข้อมูลรถทั้งหมดจาก API
       const data = await res.json();
-
-      // กรองข้อมูลเฉพาะรถที่อยู่ในจังหวัดที่เลือก
       const filteredCars = data.filter(car => car.province === location);
-
       setCarData(filteredCars); // เก็บข้อมูลรถที่กรองแล้วใน state
     } catch (error) {
       console.error('Error fetching cars data:', error);
     }
   };
 
+  // ดึงข้อมูลรายการโปรดจากฐานข้อมูล
+  const fetchFavorites = async () => {
+    try {
+      const res = await fetch('/api/favorites');
+      const data = await res.json();
+      setFavorites(data.map(fav => fav.id));  // เก็บเฉพาะ id ของรถที่เป็น favorite
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+    }
+  };
+
+  // ฟังก์ชันเพื่อบันทึก/ลบรายการโปรด
+  const toggleFavorite = async (carId) => {
+    try {
+      const res = await fetch('/api/favorites/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ car_id: carId })
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        setFavorites(prevFavorites =>
+          prevFavorites.includes(carId)
+            ? prevFavorites.filter(id => id !== carId) // ลบออกจากรายการโปรด
+            : [...prevFavorites, carId] // เพิ่มในรายการโปรด
+        );
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
+
+  // โหลดข้อมูลรถและรายการโปรดเมื่อหน้าโหลด
   useEffect(() => {
-    fetchCars(); // ดึงข้อมูลรถเมื่อโหลดหน้า
+    fetchCars();
+    fetchFavorites();
   }, [location]);
 
   return (
@@ -54,7 +87,6 @@ function SearchResultsPage() {
               {startDate} {startTime} - {endDate} {endTime}
             </p>
           </div>
-          {/* ปุ่มไอคอนตัวกรอง */}
           <button 
             className="text-orange-500"
             onClick={() => router.push('/main-filter')}  // นำทางไปหน้าฟิลเตอร์
@@ -62,8 +94,6 @@ function SearchResultsPage() {
             <FaFilter size={18} />
           </button>
         </div>
-
-        {/* ปุ่มตัวเลือก 'รถเช่าแนะนำ' */}
         <div className="mt-2">
           <button 
             className="bg-blue-500 text-white py-2 px-4 rounded-md"
@@ -81,25 +111,39 @@ function SearchResultsPage() {
         ) : (
           carData.map((car) => (
             <div key={car.id} className="bg-white rounded-lg shadow p-4 flex relative">
-              {/* Badge ส่วนลด */}
               <div className="absolute top-0 left-0 bg-orange-500 text-white px-3 py-1 rounded-tr-lg rounded-br-lg">
                 ลด 50%
               </div>
-              
-              {/* รูปภาพรถ */}
+
               <div className="w-1/3">
                 <img src={`/image/${car.image}`} alt={car.name} className="w-full h-32 object-cover rounded-lg" />
               </div>
 
-              {/* ข้อมูลรถ */}
-              <div className="w-2/3 pl-4">
-                <h2 className="text-lg font-semibold">{car.name || 'ไม่ระบุชื่อ'}</h2>
+              <div className="w-2/3 pl-4 relative">
+                <button
+                  className="absolute top-0 right-0 text-gray-500"
+                  onClick={() => toggleFavorite(car.id)} // เรียกฟังก์ชัน toggleFavorite เมื่อคลิก
+                >
+                  {favorites.includes(car.id) ? (
+                    <FaHeart className="text-red-500" size={24} />
+                  ) : (
+                    <FaRegHeart className="text-gray-500" size={24} />
+                  )}
+                </button>
+
+                <h2 className="text-lg font-semibold">
+                  {car.name || 'ไม่ระบุชื่อ'} {car.year && `(${car.year})`}
+                </h2>
                 <p className="text-sm text-gray-500">รุ่น: {car.model}</p>
                 <p className="text-sm text-gray-500">เกียร์: {car.transmission}</p>
                 <p className="text-sm text-gray-500">ที่นั่ง: {car.passenger_capacity}</p>
                 <p className="text-sm text-gray-500">จังหวัด: {car.province}</p>
 
-                {/* ราคาเต็มและราคาหลังลด */}
+                <div className="flex items-center mt-2">
+                  <img src={`/image/${car.owner_image}`} alt="Owner" className="w-8 h-8 rounded-full object-cover mr-2" />
+                  <p className="text-sm text-gray-500">ผู้ลงชื่อ: {car.owner_name || 'ไม่ระบุ'}</p>
+                </div>
+
                 <div className="flex flex-col mt-2">
                   <div className="text-gray-400 line-through">
                     {car.rental_price ? `${car.rental_price} บาท/วัน` : 'ไม่ระบุราคา'}

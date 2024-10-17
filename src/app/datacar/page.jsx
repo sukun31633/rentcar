@@ -109,6 +109,14 @@ function DataCar() {
                     <p>ความจุกระเป๋า: {car.luggage_capacity || 'กรุณาใส่ข้อมูล'} กระเป๋า</p>
                     <p>อุปกรณ์ภายในรถ: {car.features || 'กรุณาใส่ข้อมูล'}</p>
                     <p>จังหวัด: {car.province || 'กรุณาใส่ข้อมูล'}</p>
+
+                    {/* ข้อมูลผู้ลงชื่อ */}
+                    <p className="font-semibold">ผู้ลงชื่อ: {car.owner_name || 'ไม่ระบุ'}</p>
+
+                    {/* รูปภาพผู้ลง */}
+                    {car.owner_image && (
+                      <img src={`/image/${car.owner_image}`} alt="Owner" className="w-16 h-16 object-cover rounded-full mt-2" />
+                    )}
                   </div>
 
                   {/* ปุ่มลบ */}

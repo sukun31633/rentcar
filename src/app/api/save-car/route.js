@@ -1,20 +1,19 @@
-// src/app/api/save-car/route.js
 import pool from '../../../../lib/mysql';
 
 export async function POST(req) {
     try {
         // รับข้อมูลจาก request body
-        const { name, model, year, transmission, rentalPrice, passengerCapacity, luggageCapacity, features, province, image } = await req.json();
+        const { name, model, year, transmission, rentalPrice, passengerCapacity, luggageCapacity, features, province, image, ownerName, ownerImage } = await req.json();
 
         // ตรวจสอบว่าข้อมูลที่จำเป็นครบถ้วนหรือไม่
-        if (!name || !model || !year || !transmission || !rentalPrice || !passengerCapacity || !luggageCapacity || !features || !province || !image) {
+        if (!name || !model || !year || !transmission || !rentalPrice || !passengerCapacity || !luggageCapacity || !features || !province || !image || !ownerName || !ownerImage) {
             return new Response(JSON.stringify({ success: false, message: 'Missing required fields' }), { status: 400 });
         }
 
         // บันทึกข้อมูลลงในตาราง cars
         const [result] = await pool.query(
-            'INSERT INTO cars (name, model, year, transmission, rental_price, passenger_capacity, luggage_capacity, features, province, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [name, model, year, transmission, rentalPrice, passengerCapacity, luggageCapacity, features, province, image]
+            'INSERT INTO cars (name, model, year, transmission, rental_price, passenger_capacity, luggage_capacity, features, province, image, owner_name, owner_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [name, model, year, transmission, rentalPrice, passengerCapacity, luggageCapacity, features, province, image, ownerName, ownerImage]
         );
 
         // ตรวจสอบว่าการบันทึกสำเร็จหรือไม่

@@ -27,7 +27,9 @@ function AdminPage() {
     luggageCapacity: '',
     features: '',
     province: '', // เพิ่มฟิลด์ข้อมูลจังหวัด
-    image: '', // แทนที่การอัปโหลดด้วยการเลือกจากตัวเลือก
+    image: '', // ฟิลด์เลือกรูปภาพรถ
+    ownerName: '', // ฟิลด์ชื่อคนลง
+    ownerImage: '', // ฟิลด์เลือกรูปคนลง
   });
 
   const handleChange = (e) => {
@@ -59,7 +61,9 @@ function AdminPage() {
           luggageCapacity: '',
           features: '',
           province: '',
-          image: ''
+          image: '',
+          ownerName: '',
+          ownerImage: '',
         });
       } else {
         setMessage({ type: 'error', content: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' });
@@ -161,7 +165,6 @@ function AdminPage() {
               <option value="ภูเก็ต">ภูเก็ต</option>
               <option value="ขอนแก่น">ขอนแก่น</option>
               <option value="นครราชสีมา">นครราชสีมา</option>
-              {/* เพิ่มจังหวัดอื่นๆ ที่ต้องการ */}
             </select>
           </div>
 
@@ -220,7 +223,7 @@ function AdminPage() {
             />
           </div>
 
-          {/* ฟิลด์ เลือกรูปภาพ */}
+          {/* ฟิลด์ เลือกรูปภาพรถ */}
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">เลือกรูปภาพรถ:</label>
             <select
@@ -238,13 +241,55 @@ function AdminPage() {
             </select>
           </div>
 
-          {/* แสดงภาพตัวอย่าง */}
+          {/* แสดงภาพตัวอย่างรถ */}
           {carDetails.image && (
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">ภาพตัวอย่าง:</label>
+              <label className="block text-gray-700 text-sm font-bold mb-2">ภาพตัวอย่างรถ:</label>
               <img 
                 src={`/image/${carDetails.image}`}  // ใช้เส้นทาง /image/ ที่ถูกต้อง
                 alt="Car" 
+                className="w-32 h-32 object-cover rounded-md"
+              />
+            </div>
+          )}
+
+          {/* ฟิลด์ ชื่อคนลง */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">ชื่อคนลง:</label>
+            <input
+              type="text"
+              name="ownerName"
+              value={carDetails.ownerName}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="กรอกชื่อคนลง"
+            />
+          </div>
+
+          {/* ฟิลด์ เลือกรูปภาพคนลง */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">เลือกรูปภาพคนลง:</label>
+            <select
+              name="ownerImage"
+              value={carDetails.ownerImage}
+              onChange={handleChange}
+              required
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">เลือกรูปภาพ</option>
+              <option value="hippo.webp">hippo</option>
+              <option value="kit.jpg">kit</option>
+            </select>
+          </div>
+
+          {/* แสดงภาพตัวอย่างคนลง */}
+          {carDetails.ownerImage && (
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">ภาพตัวอย่างคนลง:</label>
+              <img 
+                src={`/image/${carDetails.ownerImage}`}  // ใช้เส้นทาง /image/ ที่ถูกต้อง
+                alt="Owner" 
                 className="w-32 h-32 object-cover rounded-md"
               />
             </div>
