@@ -54,15 +54,21 @@ function SearchResultsPage() {
               {startDate} {startTime} - {endDate} {endTime}
             </p>
           </div>
-          {/* แสดงเฉพาะไอคอนกรองสีส้ม */}
-          <button className="text-orange-500">
+          {/* ปุ่มไอคอนตัวกรอง */}
+          <button 
+            className="text-orange-500"
+            onClick={() => router.push('/main-filter')}  // นำทางไปหน้าฟิลเตอร์
+          >
             <FaFilter size={18} />
           </button>
         </div>
 
-        {/* ปุ่มตัวเลือก 'รถทั้งหมด' */}
+        {/* ปุ่มตัวเลือก 'รถเช่าแนะนำ' */}
         <div className="mt-2">
-          <button className="bg-blue-500 text-white py-2 px-4 rounded-md">
+          <button 
+            className="bg-blue-500 text-white py-2 px-4 rounded-md"
+            onClick={() => router.push('/recommended-filter')} // นำทางไปหน้าตัวกรองการค้นหา
+          >
             รถเช่าแนะนำ
           </button>
         </div>
