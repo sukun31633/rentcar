@@ -17,6 +17,12 @@ function SearchResultsPage() {
   const startTime = searchParams.get('startTime');
   const endTime = searchParams.get('endTime');
 
+  // ฟังก์ชันเพื่อจัดรูปแบบวันที่เป็น DD-MM-YYYY
+  const formatDate = (dateStr) => {
+    const [year, month, day] = dateStr.split('-');
+    return `${day}-${month}-${year}`;
+  };
+
   // ฟังก์ชันเพื่อดึงข้อมูลจาก API
   const fetchCars = async () => {
     try {
@@ -84,7 +90,9 @@ function SearchResultsPage() {
           <div className="text-sm text-gray-600">
             {location}
             <p className="text-xs">
-              {startDate} {startTime} - {endDate} {endTime}
+              {startDate && endDate 
+                ? `${formatDate(startDate)} ${startTime} - ${formatDate(endDate)} ${endTime}`
+                : 'ไม่มีข้อมูล'}
             </p>
           </div>
           <button 
