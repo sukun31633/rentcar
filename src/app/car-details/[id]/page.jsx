@@ -76,12 +76,6 @@ function CarDetailsPage() {
       <main className="w-full max-w-lg bg-white shadow mt-4 p-4 rounded-lg">
         <div className="relative">
           <img src={`/image/${carDetails.image}`} alt={carDetails.name} className="w-full h-64 object-cover rounded-lg" />
-          {/* รูปภาพเพิ่มเติม */}
-          <div className="flex space-x-2 mt-2">
-            {carDetails.additionalImages?.map((img, index) => (
-              <img key={index} src={`/image/${img}`} alt={`Additional ${index}`} className="w-16 h-16 object-cover rounded-md" />
-            ))}
-          </div>
         </div>
         <h2 className="text-2xl font-bold mt-4">{carDetails.name} ({carDetails.year})</h2>
 
@@ -163,7 +157,7 @@ function CarDetailsPage() {
           className="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg"
           onClick={() => router.push(`/booking?carId=${carDetails.id}`)}
         >
-          จองรถทันที
+          จองรถคันนี้
         </button>
       </main>
     </div>
