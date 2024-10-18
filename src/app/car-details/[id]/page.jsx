@@ -125,12 +125,18 @@ function CarDetailsPage() {
           </ul>
         </section>
 
-         {/* ข้อมูลเจ้าของรถ */}
-         <section className="mt-4 flex items-center">
+        {/* ข้อมูลเจ้าของรถ */}
+        <section className="mt-4 flex items-center">
           <img src={`/image/${carDetails.owner_image}`} alt="Owner" className="w-12 h-12 rounded-full object-cover mr-2" />
           <div>
             <p className="text-sm font-semibold">{carDetails.owner_name}</p>
-            <p className="text-xs text-gray-500"><FaStar className="inline-block text-yellow-400 mr-1" />{carDetails.owner_rating} คะแนน ({carDetails.reviews} รีวิว)</p>
+            <p 
+              className="text-xs text-gray-500 cursor-pointer"
+              onClick={() => router.push(`/car-details/${id}/reviews`)} // เพิ่มการนำทางไปยังหน้ารีวิว
+            >
+              <FaStar className="inline-block text-yellow-400 mr-1" />
+              {carDetails.owner_rating} คะแนน ({carDetails.reviews} รีวิว)
+            </p>
           </div>
         </section>
 
@@ -151,8 +157,6 @@ function CarDetailsPage() {
           <h3 className="font-semibold mt-4">อุปกรณ์เสริม</h3>
           <p className="text-sm text-gray-700 mt-2">มีบริการเสริม baby seat ฟรี (จำนวนจำกัด)</p>
         </section>
-
-       
 
         {/* ปุ่มจองทันที */}
         <button
