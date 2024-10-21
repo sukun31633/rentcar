@@ -1,4 +1,3 @@
-// /app/api/bookings/route.js
 import pool from '../../../../lib/mysql';
 
 export async function POST(req) {
@@ -6,8 +5,8 @@ export async function POST(req) {
     const body = await req.json();
     const {
       car_id,
-      user_name,
-      user_surname,
+      user_first_name,
+      user_last_name,
       user_email,
       user_phone,
       pickup_date,
@@ -17,34 +16,49 @@ export async function POST(req) {
       pickup_location,
       return_location,
       payment_method,
+      credit_card_number, // เก็บเลขบัตรเครดิต (ถ้ามี)
       total_price,
+      number_of_days,
       discount_code
     } = body;
 
-    // บันทึกข้อมูลการจองลงในตาราง bookings
-    const query = `
-      INSERT INTO bookings (car_id, user_name, user_surname, user_email, user_phone, 
-        pickup_date, return_date, pickup_time, return_time, pickup_location, 
-        return_location, payment_method, total_price, discount_code)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+    // ตรวจสอบว่าค่าที่สำคัญไม่เป็น null หรือ undefined
+    if (!car_id || !user_first_name || !user_last_name || !pickup_date || !return_date) {
+      console.error('Missing required fields in booking data');
+      return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
+    }
 
-    const [result] = await pool.execute(query, [
+    // ตรวจสอบค่าอื่น ๆ ว่ามีการกำหนดไว้หรือไม่ หากไม่มีให้ใช้ null แทน
+    const safeValues = [
       car_id,
-      user_name,
-      user_surname,
-      user_email,
-      user_phone,
+      user_first_name,
+      user_last_name,
+      user_email || null,
+      user_phone || null,
       pickup_date,
       return_date,
-      pickup_time,
-      return_time,
-      pickup_location,
-      return_location,
-      payment_method,
-      total_price,
-      discount_code
-    ]);
+      pickup_time || null,
+      return_time || null,
+      pickup_location || null,
+      return_location || null,
+      payment_method || null,
+      credit_card_number || null,
+      total_price || null,
+      number_of_days || null,
+      discount_code || null,
+    ];
+
+    // บันทึกข้อมูลการจองลงในตาราง bookings
+    const query = `
+      INSERT INTO bookings (
+        car_id, user_first_name, user_last_name, user_email, user_phone,
+        pickup_date, return_date, pickup_time, return_time, pickup_location,
+        return_location, payment_method, credit_card_number, total_price,
+        number_of_days, discount_code
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const [result] = await pool.execute(query, safeValues);
 
     return new Response(JSON.stringify({ success: true, bookingId: result.insertId }), { status: 201 });
   } catch (error) {

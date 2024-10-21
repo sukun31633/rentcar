@@ -187,11 +187,13 @@ function CarReservationPage() {
 
         {/* ปุ่มยืนยันการจอง */}
         <button
-          className="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg"
-          onClick={() => router.push(`/confirmation?carId=${carId}`)}
-        >
-          ถัดไป
-        </button>
+  className="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg"
+  onClick={() =>
+    router.push(`/driver-details?carId=${carId}&location=${location}&startDate=${startDate}&endDate=${endDate}&startTime=${startTime}&endTime=${endTime}&totalPrice=${totalPrice}&numberOfDays=${numberOfDays}`)
+  }
+>
+  ถัดไป
+</button>
       </main>
     </div>
   );
