@@ -162,10 +162,14 @@ function SearchResultsPage() {
                 </div>
 
                 <button
-                  className="mt-2 bg-blue-500 text-white py-1 px-4 rounded-md"
-                  onClick={() => router.push(`/car-details/${car.id}`)}
+                   className="mt-2 bg-blue-500 text-white py-1 px-4 rounded-md"
+                   onClick={() =>
+                   router.push(
+                   `/car-details/${car.id}?location=${encodeURIComponent(location)}&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}&startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}`
+                   )
+                  }
                 >
-                  ดูรายละเอียด
+                ดูรายละเอียด
                 </button>
               </div>
             </div>

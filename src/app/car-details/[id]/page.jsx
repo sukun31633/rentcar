@@ -1,15 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaHeart, FaRegHeart, FaStar } from 'react-icons/fa';
 
 function CarDetailsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { id } = useParams();
   const [carDetails, setCarDetails] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  // ดึงค่าพารามิเตอร์จาก URL
+  const location = searchParams.get('location');
+  const startDate = searchParams.get('startDate');
+  const endDate = searchParams.get('endDate');
+  const startTime = searchParams.get('startTime');
+  const endTime = searchParams.get('endTime');
 
   // ฟังก์ชันเพื่อดึงข้อมูลของรถทั้งหมดจาก API และกรองตาม id
   const fetchCarDetails = async () => {
@@ -126,16 +134,17 @@ function CarDetailsPage() {
             <p className="text-sm font-semibold">{carDetails.owner_name}</p>
             <p 
               className="text-xs text-gray-500 cursor-pointer"
-              onClick={() => router.push(`/car-details/${id}/reviews`)} // เพิ่มการนำทางไปยังหน้ารีวิว
+              onClick={() => router.push(`/car-details/${id}/reviews`)}
             >
               <FaStar className="inline-block text-yellow-400 mr-1" />
               {carDetails.owner_rating} คะแนน ({carDetails.reviews} รีวิว)
             </p>
           </div>
+
         </section>
 
-        {/* ข้อมูลเพิ่มเติมตามรูปภาพ */}
-        <section className="mt-4">
+         {/* ข้อมูลเพิ่มเติมตามรูปภาพ */}
+         <section className="mt-4">
           <h3 className="font-semibold">เวลาทำการ</h3>
           <p className="text-sm text-gray-700 mt-2">8.00-21.00 น.</p>
 
@@ -155,7 +164,13 @@ function CarDetailsPage() {
         {/* ปุ่มจองทันที */}
         <button
           className="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg"
-          onClick={() => router.push(`/booking?carId=${carDetails.id}`)}
+          onClick={() => {
+            if (carDetails && location && startDate && endDate && startTime && endTime) {
+              router.push(`/car-reservation?carId=${carDetails.id}&location=${location}&startDate=${startDate}&endDate=${endDate}&startTime=${startTime}&endTime=${endTime}`);
+            } else {
+              console.error("Missing parameters for reservation.");
+            }
+          }}
         >
           จองรถคันนี้
         </button>
