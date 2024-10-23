@@ -8,13 +8,11 @@ import Footer from '../components/Footer';
 function MessagesPage() {
     const router = useRouter();
     const [messages, setMessages] = useState([]);
-    const [cars, setCars] = useState([]);
 
-    // ดึงข้อมูลการจอง
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                const res = await fetch('/api/bookings/get-bookings');
+                const res = await fetch('/api/get-bookings');
                 const data = await res.json();
                 if (data.success) {
                     setMessages(data.bookings);
@@ -24,33 +22,13 @@ function MessagesPage() {
             }
         };
 
-        // ดึงข้อมูลรถ
-        const fetchCars = async () => {
-            try {
-                const res = await fetch('/api/get-cars');
-                const data = await res.json();
-                setCars(data);
-            } catch (error) {
-                console.error('Error fetching cars:', error);
-            }
-        };
-
         fetchBookings();
-        fetchCars();
     }, []);
 
-    // ฟังก์ชันสำหรับค้นหารูปรถตาม car_id ในการจอง
-    const findCarDetails = (carId) => {
-        const car = cars.find((car) => car.id === parseInt(carId));
-        return car ? car : { image: '/image/default-car.png', name: 'ไม่ระบุชื่อ', year: '' };
-    };
-
-    // ฟังก์ชันสำหรับเปิดหน้าการสนทนา
     const handleChatOpen = (id) => {
         router.push(`/messages/${id}`);
     };
 
-    // ฟังก์ชันสำหรับนำทางไปหน้า Favorites เมื่อคลิกรูปหัวใจ
     const handleHeartClick = () => {
         router.push('/favorites');
     };
@@ -71,28 +49,25 @@ function MessagesPage() {
                 {messages.length === 0 ? (
                     <p className="text-center">ไม่พบการจอง</p>
                 ) : (
-                    messages.map((message) => {
-                        const carDetails = findCarDetails(message.car_id);
-                        return (
-                            <div
-                                key={message.id}
-                                className="flex items-center p-4 border-b cursor-pointer hover:bg-gray-50"
-                                onClick={() => handleChatOpen(message.id)}
-                            >
-                                <img
-                                    src={`/image/${carDetails.image}`}
-                                    alt={carDetails.name}
-                                    className="w-16 h-16 rounded-lg mr-4"
-                                />
-                                <div>
-                                    <h2 className="text-gray-800 font-semibold">
-                                        {carDetails.name} ({carDetails.year})
-                                    </h2>
-                                    <p className="text-gray-500">หมายเลขการจอง : {message.id}</p>
-                                </div>
+                    messages.map((message) => (
+                        <div
+                            key={message.booking_id}
+                            className="flex items-center p-4 border-b cursor-pointer hover:bg-gray-50"
+                            onClick={() => handleChatOpen(message.booking_id)}
+                        >
+                            <img
+                                src={`/image/${message.car_image}`}
+                                alt={message.car_name}
+                                className="w-16 h-16 rounded-lg mr-4"
+                            />
+                            <div>
+                                <h2 className="text-gray-800 font-semibold">
+                                    {message.car_name} ({message.car_year})
+                                </h2>
+                                <p className="text-gray-500">หมายเลขการจอง : {message.booking_id}</p>
                             </div>
-                        );
-                    })
+                        </div>
+                    ))
                 )}
             </main>
 
