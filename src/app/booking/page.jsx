@@ -1,73 +1,103 @@
-import React from 'react';
-import Footer from '../components/Footer'; // นำเข้า Footer
-import Container from '../components/Container';
-import Header from '../components/Header'; // นำเข้า Header
-import Link from 'next/link'; // นำเข้า Link จาก Next.js
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { FaCar, FaHeart } from 'react-icons/fa';
+import Footer from '../components/Footer'; // นำเข้า Footer ที่สร้างไว้
 
 function BookingPage() {
+    const router = useRouter();
+    const [bookings, setBookings] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchBookings = async () => {
+            try {
+                const res = await fetch('/api/get-bookings');
+                const data = await res.json();
+                if (data.success) {
+                    setBookings(data.bookings);
+                }
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching bookings:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchBookings();
+    }, []);
+
+    const handleCancelBooking = (bookingId) => {
+        console.log(`Cancel booking ID: ${bookingId}`);
+    };
+
+    const handleViewDetails = (bookingId) => {
+        router.push(`/booking/${bookingId}`); // ไปที่หน้า Booking Detail พร้อมส่ง bookingId
+    };
+
     return (
-        <Container>
-            <div className="min-h-screen flex flex-col">
-                {/* Header */}
-                <Header />
-
-                {/* Tabs */}
-                <div className="bg-white shadow-md mt-4">
-                    <div className="flex">
-                        <button className="flex-grow text-center py-2 border-b-4 border-blue-600">
-                            กำลังจะมาถึง
-                        </button>
-                        <Link href="/returncar">
-                            <button className="flex-grow text-center py-2 border-b-4 border-gray-200">
-                                คืนรถแล้ว/ยกเลิกการจอง
-                            </button>
-                        </Link>
-                    </div>
+        <div className="min-h-screen flex flex-col items-center">
+            {/* Header */}
+            <header className="w-full max-w-md mx-auto bg-blue-800 text-white shadow p-4 flex items-center justify-between">
+                <div className="flex items-center">
+                    <FaCar className="text-white mr-2" size={24} />
+                    <h1 className="text-lg font-semibold">การจองของคุณ</h1>
                 </div>
+                <FaHeart className="text-white" size={24} onClick={() => router.push('/favorites')} />
+            </header>
 
-                {/* Booking Details */}
-                <main className="flex-grow p-6">
-                    <div className="bg-white rounded-lg shadow-md p-6 max-w-lg mx-auto">
-                        <div className="flex items-center">
-                            <img
-                                src="/image/mazda2.png"
-                                alt="Mazda 2 2021"
-                                className="w-24 h-24 rounded-md object-cover"
-                            />
-                            <div className="ml-4">
-                                <h2 className="text-lg font-bold text-gray-700">Mazda 2 2021</h2>
-                                <p className="text-gray-600">หมายเลขการจอง: <strong>0123456789</strong></p>
+            {/* Content */}
+            <main className="w-full max-w-md mx-auto p-4 bg-white flex-grow">
+                {loading ? (
+                    <p className="text-center">กำลังโหลดข้อมูล...</p>
+                ) : bookings.length === 0 ? (
+                    <p className="text-center">ไม่พบการจอง</p>
+                ) : (
+                    bookings.map((booking) => (
+                        <div
+                            key={booking.booking_id}
+                            className="bg-white p-4 mb-4 rounded-lg shadow flex flex-col items-start"
+                        >
+                            <div
+                                className="flex items-center cursor-pointer"
+                                onClick={() => handleViewDetails(booking.booking_id)} // กดที่รูปจะนำไปหน้า Booking Detail
+                            >
+                                <img
+                                    src={`/image/${booking.car_image}`}
+                                    alt={booking.car_name}
+                                    className="w-20 h-20 rounded-lg object-cover mr-4"
+                                />
+                                <div>
+                                    <h2 className="text-lg font-semibold">{booking.car_name} {booking.car_year}</h2>
+                                    <p className="text-sm text-gray-500">หมายเลขการจอง: {booking.booking_id}</p>
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="mt-4">
-                            <p className="text-gray-600">
-                                <strong>วันที่:</strong> 15/07/22 10:00 - 16/07/22 10:00
-                            </p>
-                            <p className="text-gray-600">
-                                <strong>สถานที่รับ-ส่งรถ:</strong> สถานที่จอง
-                            </p>
-                        </div>
-
-                        <div className="mt-6 flex justify-between items-center">
-                            <span className="text-sm text-gray-500">ระยะเวลา: 1 วัน</span>
-                            
-                            {/* ปุ่มยกเลิกการจองเชื่อมโยงไปหน้า ReturnCarPage */}
-                            <Link href="/returncar">
-                                <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                            <div className="mt-4">
+                                <p className="text-sm text-gray-600">
+                                    <strong>วันที่:</strong> {booking.pickup_date} - {booking.return_date}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                    <strong>สถานที่รับ-ส่ง:</strong> {booking.pickup_location || 'สถานที่จอง'}
+                                </p>
+                            </div>
+                            <div className="mt-4 flex justify-between items-center w-full">
+                                <span className="text-sm text-gray-500">ระยะเวลา: {booking.number_of_days} วัน</span>
+                                <button
+                                    className="bg-red-500 text-white px-4 py-1 rounded-lg"
+                                    onClick={() => handleCancelBooking(booking.booking_id)}
+                                >
                                     ยกเลิกการจอง
                                 </button>
-                            </Link>
+                            </div>
                         </div>
-                    </div>
-                </main>
+                    ))
+                )}
+            </main>
 
-                {/* Footer */}
-                <footer className="bg-white border-t py-2 w-full fixed bottom-0 left-0 z-50">
-                    <Footer />
-                </footer>
-            </div>
-        </Container>
+            {/* Footer */}
+            <Footer /> {/* ใช้ Footer Component */}
+        </div>
     );
 }
 
