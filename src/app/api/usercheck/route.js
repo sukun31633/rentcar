@@ -12,7 +12,7 @@ export async function POST(req) {
         }
 
         // ค้นหาผู้ใช้ในฐานข้อมูลด้วยเบอร์โทร
-        const [rows] = await pool.query('SELECT id FROM login WHERE phone = ?', [phone]);
+        const [rows] = await pool.query('SELECT id FROM users WHERE phone = ?', [phone]);
         const user = rows[0] ? { id: rows[0].id } : null; // ถ้ามีผู้ใช้ ให้ส่ง id กลับไป
 
         console.log("User: ", user);

@@ -30,7 +30,7 @@ export async function POST(req) {
 
         // บันทึก OTP และเวลาหมดอายุในฐานข้อมูล
         const [result] = await pool.query(
-            'UPDATE login SET otp = ?, otp_expires_at = ? WHERE phone = ?',
+            'UPDATE users SET otp = ?, otp_expires_at = ? WHERE phone = ?',
             [otp, otpExpiresAt, phoneNumber]
         );
 

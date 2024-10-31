@@ -13,7 +13,7 @@ const authOptions = {
                 const { phone, password } = credentials;
 
                 try {
-                    const [rows] = await pool.query('SELECT * FROM login WHERE phone = ?', [phone]);
+                    const [rows] = await pool.query('SELECT * FROM users WHERE phone = ?', [phone]);
                     const user = rows[0];
 
                     if (!user) {

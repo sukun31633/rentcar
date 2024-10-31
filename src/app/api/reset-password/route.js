@@ -10,7 +10,7 @@ export async function POST(req) {
         }
 
         // ดึงข้อมูล OTP จากฐานข้อมูล
-        const [user] = await pool.query('SELECT otp, otp_expires_at FROM login WHERE phone = ?', [phoneNumber]);
+        const [user] = await pool.query('SELECT otp, otp_expires_at FROM users WHERE phone = ?', [phoneNumber]);
 
         if (user.length === 0) {
             return new Response(JSON.stringify({ message: "ไม่พบผู้ใช้" }), { status: 404 });
@@ -29,7 +29,7 @@ export async function POST(req) {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // อัปเดตรหัสผ่านใหม่ในฐานข้อมูล
-        const [result] = await pool.query('UPDATE login SET password = ? WHERE phone = ?', [hashedPassword, phoneNumber]);
+        const [result] = await pool.query('UPDATE users SET password = ? WHERE phone = ?', [hashedPassword, phoneNumber]);
 
         if (result.affectedRows === 0) {
             return new Response(JSON.stringify({ message: "ไม่พบผู้ใช้" }), { status: 404 });

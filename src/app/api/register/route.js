@@ -13,7 +13,7 @@ export async function POST(req) {
 
         // สร้างการเชื่อมต่อกับฐานข้อมูลและบันทึกข้อมูลผู้ใช้
         const [result] = await pool.query(
-            'INSERT INTO login (name, surname, email, phone, password) VALUES (?, ?, ?, ?, ?)', 
+            'INSERT INTO users (name, surname, email, phone, password) VALUES (?, ?, ?, ?, ?)', 
             [firstName, lastName, email, phone, hashedPassword]
         );
 

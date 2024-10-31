@@ -7,7 +7,7 @@ export async function POST(req) {
     try {
         // ดึงข้อมูล OTP และเวลาหมดอายุจากฐานข้อมูล
         const [rows] = await pool.query(
-            'SELECT otp, otp_expires_at FROM login WHERE phone = ?',
+            'SELECT otp, otp_expires_at FROM users WHERE phone = ?',
             [phoneNumber]
         );
 
