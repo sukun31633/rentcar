@@ -22,12 +22,13 @@ function Footer() {
         </Link>
 
         {/* ปุ่มค้นหารถเช่า */}
-        <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-blue-600 p-3 rounded-full shadow-lg flex items-center justify-center"> {/* ลอยขึ้นมาด้วย -top-10 */}
-          <Link href="/search" className="text-white flex flex-col items-center">
-            <FaCar className="h-6 w-6 mb-1" /> {/* ขนาดไอคอนรถ */}
-            <span className="text-sm">ค้นหารถเช่า</span>
-          </Link>
-        </div>
+        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-blue-600 p-2 rounded-full shadow-lg flex items-center justify-center"> {/* ปรับจาก -top-10 และ p-3 เป็น -top-8 และ p-2 */}
+           <Link href="/search" className="text-white flex flex-col items-center">
+            <FaCar className="h-5 w-5 mb-1" /> {/* ปรับขนาดไอคอนเป็น h-5 w-5 */}
+           <span className="text-xs">ค้นหารถเช่า</span> {/* ลดขนาดข้อความ */}
+         </Link>
+         </div>
+
 
         <Link href="/messages" className="text-sm text-center flex-1">
           <div className="flex flex-col items-center">

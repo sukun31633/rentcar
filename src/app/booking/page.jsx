@@ -117,7 +117,17 @@ function BookingPage() {
                                 </Link>
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-600">
-                                        <strong>วันที่:</strong> {booking.pickup_date} - {booking.return_date}
+                                        <strong>วันที่:</strong> 
+                                        {new Date(booking.pickup_date).toLocaleDateString('th-TH', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                        })} - 
+                                        {new Date(booking.return_date).toLocaleDateString('th-TH', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                        })}
                                     </p>
                                     <p className="text-sm text-gray-600">
                                         <strong>สถานที่รับ-ส่ง:</strong> {booking.pickup_location || 'สถานที่จอง'}

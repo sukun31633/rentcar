@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { FaArrowLeft, FaCalendarAlt, FaMapMarkerAlt, FaInfoCircle } from 'react-icons/fa';
+import { FaArrowLeft, FaCalendarAlt, FaMapMarkerAlt, FaUser, FaEnvelope, FaPhone } from 'react-icons/fa';
 
 function BookingDetailPage() {
     const router = useRouter();
@@ -48,8 +48,11 @@ function BookingDetailPage() {
             const result = await response.json();
 
             if (result.success) {
-                alert("ยกเลิกการจองเรียบร้อย");
-                router.push('/booking'); // กลับไปที่หน้าการจองหลังจากยกเลิกสำเร็จ
+                alert("ยกเลิกการจองเรียบร้อยแล้ว");
+                setBookingDetails(prevDetails => ({
+                    ...prevDetails,
+                    status_name: 'ยกเลิก'
+                }));
             } else {
                 alert("ไม่สามารถยกเลิกการจองได้");
             }
@@ -58,7 +61,6 @@ function BookingDetailPage() {
         }
     };
 
-    // เพิ่มฟังก์ชัน handleRebook สำหรับการจองอีกครั้ง
     const handleRebook = async () => {
         try {
             const response = await fetch(`/api/bookings/rebook-booking?id=${bookingDetails.booking_id}`, {
@@ -68,7 +70,6 @@ function BookingDetailPage() {
 
             if (result.success) {
                 alert("จองอีกครั้งเรียบร้อยแล้ว");
-                // อัปเดตสถานะใน UI
                 setBookingDetails(prevDetails => ({
                     ...prevDetails,
                     status_name: 'กำลังจะมาถึง'
@@ -81,15 +82,6 @@ function BookingDetailPage() {
         }
     };
 
-    if (loading) {
-        return <div>กำลังโหลดข้อมูล...</div>;
-    }
-
-    if (error) {
-        return <div>{error}</div>;
-    }
-
-    // Format dates for better readability
     const formatDate = (date) => new Date(date).toLocaleDateString('th-TH', {
         year: 'numeric',
         month: 'long',
@@ -98,89 +90,104 @@ function BookingDetailPage() {
         minute: '2-digit',
     });
 
+    if (loading) {
+        return <div>กำลังโหลดข้อมูล...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
+    const isCanceled = bookingDetails?.status_name === 'ยกเลิก';
+
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center">
-            <main className="w-full max-w-lg bg-white shadow mt-4 p-4 rounded-lg">
-                {/* Header Section */}
+            <main className={`w-full max-w-md bg-white shadow-lg mt-4 p-4 rounded-lg border ${isCanceled ? 'border-red-400' : 'border-green-400'}`}>
                 <button onClick={() => router.back()} className="flex items-center text-gray-600 mb-4">
                     <FaArrowLeft className="mr-2" />
                     <span className="flex-grow text-center font-bold text-lg">การจองของฉัน</span>
                 </button>
 
-                {/* Booking ID Section */}
-                <h2 className="text-center font-bold text-blue-600 mb-4">
-                    หมายเลขการจอง: {bookingDetails.booking_id}
+                <h2 className={`text-center font-bold mb-2 text-lg ${isCanceled ? 'text-red-600' : 'text-blue-600'}`}>
+                    หมายเลขการจอง : {bookingDetails?.booking_id}
                 </h2>
+                <p className={`text-center mb-4 ${isCanceled ? 'text-red-500' : 'text-blue-500'}`}>
+                    {isCanceled ? 'ยกเลิกการจอง' : 'กำลังจะมาถึง'}
+                </p>
 
-                {/* Car Image and Details Section */}
                 <div className="flex items-center mb-4">
                     <img
-                        src={`/image/${bookingDetails.car_image}`}
-                        alt={bookingDetails.car_name}
+                        src={`/image/${bookingDetails?.car_image}`}
+                        alt={bookingDetails?.car_name}
                         className="w-24 h-24 rounded-lg object-cover mr-4"
                     />
                     <div className="ml-4">
-                        <h2 className="text-md font-bold">{bookingDetails.car_name} {bookingDetails.car_year}</h2>
+                        <h2 className="text-md font-bold">{bookingDetails?.car_name} {bookingDetails?.car_year}</h2>
                     </div>
                 </div>
 
-                {/* Divider */}
                 <hr className="my-4" />
 
-                {/* Booking Details Section */}
                 <section className="mb-4">
                     <h3 className="text-md font-bold mb-2">รายละเอียดการจอง</h3>
-                    <div className="grid grid-cols-6 items-center gap-y-2">
+                    <div className="flex justify-between">
                         <FaCalendarAlt className="text-blue-500" />
-                        <p className="col-span-5 text-sm">
-                            {formatDate(bookingDetails.pickup_date)} - {formatDate(bookingDetails.return_date)} 
-                        </p>
-
+                        <span className="text-blue-500 text-right">{formatDate(bookingDetails?.pickup_date)}</span>
+                    </div>
+                    <div className="flex justify-between">
                         <FaMapMarkerAlt className="text-blue-500" />
-                        <p className="col-span-5 text-sm text-blue-600">
-                            สถานที่รับ-ส่ง: {bookingDetails.pickup_location}
-                        </p>
-
-                        <FaInfoCircle className="text-blue-500" />
-                        <div className="col-span-5">
-                            {bookingDetails.status_name === "ยกเลิก" ? (
-                                <button className="bg-red-500 text-white px-4 py-1 rounded-full text-sm">
-                                    การจองนี้ถูกยกเลิกแล้ว
-                                </button>
-                            ) : (
-                                <button className="bg-orange-500 text-white px-4 py-1 rounded-full text-sm">
-                                    รอการติดต่อกลับจากบริษัท
-                                </button>
-                            )}
-                        </div>
+                        <span className="text-blue-500 text-right">{formatDate(bookingDetails?.return_date)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <FaUser className="text-blue-500" />
+                        <span className="text-blue-500 text-right">{bookingDetails?.user_first_name} {bookingDetails?.user_last_name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <FaEnvelope className="text-blue-500" />
+                        <span className="text-blue-500 text-right">{bookingDetails?.user_email}</span>
+                    </div>
+                    <div className="flex justify-between">
+                        <FaPhone className="text-blue-500" />
+                        <span className="text-blue-500 text-right">{bookingDetails?.user_phone}</span>
                     </div>
                 </section>
 
-                {/* Divider */}
                 <hr className="my-4" />
 
-                {/* Payment Details */}
                 <section className="mb-4">
-                    <h3 className="text-md font-bold mb-2">รายละเอียดการชำระ</h3>
-                    <div className="bg-blue-100 p-3 rounded-lg mb-4">
-                        <p className="text-md">
-                            <strong>ราคาทั้งหมด:</strong> ฿{parseFloat(bookingDetails.total_price).toFixed(2)}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                            * ชำระ ณ วันที่รับรถเท่านั้น และจะคืนเมื่อส่งคืนรถ
-                        </p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-y-2">
-                        <p className="text-sm font-medium text-gray-600">วิธีการชำระ:</p>
-                        <p className="text-sm">{bookingDetails.payment_method}</p>
+                    <h3 className="text-md font-bold mb-2">ยอดรวมสุทธิ</h3>
+                    <div className="bg-blue-100 p-3 rounded-lg mb-4 flex justify-between items-center">
+                        <p className="text-md font-bold text-blue-500 text-right">฿{parseFloat(bookingDetails?.total_price).toFixed(2)}</p>
+                        <p className="text-xs text-gray-500">*ชำระเงิน ณ วันที่รับรถเท่านั้น</p>
                     </div>
                 </section>
 
-                {/* Divider */}
                 <hr className="my-4" />
 
-                {/* Cancel Button or Rebook Button */}
-                {bookingDetails.status_name === "ยกเลิก" ? (
+                <section className="mb-4">
+                    <h3 className="text-md font-bold mb-2">สถานะการจอง</h3>
+                    {isCanceled ? (
+                        <div className="flex items-center gap-2 text-red-500">
+                            <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                            <p>ยกเลิกการจอง</p>
+                        </div>
+                    ) : (
+                        <div>
+                            <div className="flex items-center gap-2 text-green-500">
+                                <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                                <p>ทำการจอง</p>
+                            </div>
+                            <div className="flex items-center gap-2 text-orange-500">
+                                <span className="w-2 h-2 rounded-full bg-orange-500"></span>
+                                <p>รอติดต่อกลับจากบริษัท</p>
+                            </div>
+                        </div>
+                    )}
+                </section>
+
+                <hr className="my-4" />
+
+                {isCanceled ? (
                     <button
                         onClick={handleRebook}
                         className="w-full mt-6 bg-blue-500 text-white py-3 rounded-lg"
