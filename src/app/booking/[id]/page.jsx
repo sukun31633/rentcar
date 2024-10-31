@@ -58,6 +58,29 @@ function BookingDetailPage() {
         }
     };
 
+    // เพิ่มฟังก์ชัน handleRebook สำหรับการจองอีกครั้ง
+    const handleRebook = async () => {
+        try {
+            const response = await fetch(`/api/bookings/rebook-booking?id=${bookingDetails.booking_id}`, {
+                method: 'POST',
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert("จองอีกครั้งเรียบร้อยแล้ว");
+                // อัปเดตสถานะใน UI
+                setBookingDetails(prevDetails => ({
+                    ...prevDetails,
+                    status_name: 'กำลังจะมาถึง'
+                }));
+            } else {
+                alert("ไม่สามารถจองอีกครั้งได้");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
     if (loading) {
         return <div>กำลังโหลดข้อมูล...</div>;
     }
@@ -120,9 +143,15 @@ function BookingDetailPage() {
 
                         <FaInfoCircle className="text-blue-500" />
                         <div className="col-span-5">
-                            <button className={`px-4 py-1 rounded-full text-sm ${bookingDetails.status_name === 'ยกเลิก' ? 'bg-red-500' : 'bg-orange-500'} text-white`}>
-                                {bookingDetails.status_name === 'ยกเลิก' ? 'การจองนี้ถูกยกเลิกแล้ว' : 'รอการติดต่อกลับจากบริษัท'}
-                            </button>
+                            {bookingDetails.status_name === "ยกเลิก" ? (
+                                <button className="bg-red-500 text-white px-4 py-1 rounded-full text-sm">
+                                    การจองนี้ถูกยกเลิกแล้ว
+                                </button>
+                            ) : (
+                                <button className="bg-orange-500 text-white px-4 py-1 rounded-full text-sm">
+                                    รอการติดต่อกลับจากบริษัท
+                                </button>
+                            )}
                         </div>
                     </div>
                 </section>
@@ -144,20 +173,21 @@ function BookingDetailPage() {
                     <div className="grid grid-cols-2 gap-y-2">
                         <p className="text-sm font-medium text-gray-600">วิธีการชำระ:</p>
                         <p className="text-sm">{bookingDetails.payment_method}</p>
-                        {bookingDetails.payment_method === 'creditCard' && (
-                            <>
-                                <p className="text-sm font-medium text-gray-600">บัตรเครดิต:</p>
-                                <p className="text-sm">**** **** **** {bookingDetails.credit_card_number.slice(-4)}</p>
-                            </>
-                        )}
                     </div>
                 </section>
 
                 {/* Divider */}
                 <hr className="my-4" />
 
-                {/* Cancel Button */}
-                {bookingDetails.status_name !== 'ยกเลิก' && (
+                {/* Cancel Button or Rebook Button */}
+                {bookingDetails.status_name === "ยกเลิก" ? (
+                    <button
+                        onClick={handleRebook}
+                        className="w-full mt-6 bg-blue-500 text-white py-3 rounded-lg"
+                    >
+                        จองอีกครั้ง
+                    </button>
+                ) : (
                     <button
                         onClick={handleCancelBooking}
                         className="w-full mt-6 bg-red-500 text-white py-3 rounded-lg"
