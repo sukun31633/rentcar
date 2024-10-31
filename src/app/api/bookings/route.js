@@ -16,7 +16,7 @@ export async function POST(req) {
       pickup_location,
       return_location,
       payment_method,
-      credit_card_number, // เก็บเลขบัตรเครดิต (ถ้ามี)
+      credit_card_number,
       total_price,
       number_of_days,
       discount_code
@@ -28,7 +28,6 @@ export async function POST(req) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
     }
 
-    // ตรวจสอบค่าอื่น ๆ ว่ามีการกำหนดไว้หรือไม่ หากไม่มีให้ใช้ null แทน
     const safeValues = [
       car_id,
       user_first_name,
@@ -48,15 +47,14 @@ export async function POST(req) {
       discount_code || null,
     ];
 
-    // บันทึกข้อมูลการจองลงในตาราง bookings
-    const query = `
-      INSERT INTO bookings (
+    const query =  `
+      INSERT INTO bookings ( 
         car_id, user_first_name, user_last_name, user_email, user_phone,
         pickup_date, return_date, pickup_time, return_time, pickup_location,
         return_location, payment_method, credit_card_number, total_price,
         number_of_days, discount_code
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
+     `;
 
     const [result] = await pool.execute(query, safeValues);
 

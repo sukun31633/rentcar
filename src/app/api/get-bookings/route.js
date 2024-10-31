@@ -2,18 +2,15 @@ import pool from '../../../../lib/mysql';
 
 export async function GET(req) {
   try {
-    // ดึง `id` จาก query string ของ request
-    const url = new URL(req.url, 'http://localhost'); // ระบุ base URL เพื่อให้ใช้งานได้ใน environment นี้
+    const url = new URL(req.url, 'http://localhost');
     const id = url.searchParams.get('id');
 
-    // ตรวจสอบว่ามี `id` ที่ส่งเข้ามาหรือไม่
     if (id) {
       const parsedId = parseInt(id);
       if (isNaN(parsedId)) {
         return new Response(JSON.stringify({ success: false, error: 'Invalid booking ID' }), { status: 400 });
       }
 
-      // SQL query เพื่อดึงข้อมูลเฉพาะการจองที่ตรงกับ `id`
       const query = `
         SELECT 
           bookings.id AS booking_id,
@@ -33,24 +30,25 @@ export async function GET(req) {
           bookings.total_price,
           bookings.number_of_days,
           bookings.discount_code,
+          bookings.status_id,
+          booking_status.status_name,
           cars.name AS car_name,
           cars.year AS car_year,
           cars.image AS car_image
         FROM bookings
         JOIN cars ON bookings.car_id = cars.id
+        LEFT JOIN booking_status ON bookings.status_id = booking_status.status_id
         WHERE bookings.id = ?
       `;
 
       const [rows] = await pool.execute(query, [parsedId]);
 
-      // ตรวจสอบว่าพบข้อมูลหรือไม่
       if (rows.length > 0) {
         return new Response(JSON.stringify({ success: true, booking: rows[0] }), { status: 200 });
       } else {
         return new Response(JSON.stringify({ success: false, error: 'ไม่พบข้อมูลการจอง' }), { status: 404 });
       }
     } else {
-      // ถ้าไม่มี `id` ให้ส่งข้อมูลการจองทั้งหมด
       const query = `
         SELECT 
           bookings.id AS booking_id,
@@ -70,11 +68,14 @@ export async function GET(req) {
           bookings.total_price,
           bookings.number_of_days,
           bookings.discount_code,
+          bookings.status_id,
+          booking_status.status_name,
           cars.name AS car_name,
           cars.year AS car_year,
           cars.image AS car_image
         FROM bookings
         JOIN cars ON bookings.car_id = cars.id
+        LEFT JOIN booking_status ON bookings.status_id = booking_status.status_id
       `;
 
       const [rows] = await pool.execute(query);

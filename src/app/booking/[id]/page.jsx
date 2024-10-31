@@ -40,6 +40,24 @@ function BookingDetailPage() {
         }
     }, [id]);
 
+    const handleCancelBooking = async () => {
+        try {
+            const response = await fetch(`/api/bookings/cancel-booking?id=${bookingDetails.booking_id}`, {
+                method: 'POST',
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert("ยกเลิกการจองเรียบร้อย");
+                router.push('/booking'); // กลับไปที่หน้าการจองหลังจากยกเลิกสำเร็จ
+            } else {
+                alert("ไม่สามารถยกเลิกการจองได้");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
     if (loading) {
         return <div>กำลังโหลดข้อมูล...</div>;
     }
@@ -102,8 +120,8 @@ function BookingDetailPage() {
 
                         <FaInfoCircle className="text-blue-500" />
                         <div className="col-span-5">
-                            <button className="bg-orange-500 text-white px-4 py-1 rounded-full text-sm">
-                                รอการติดต่อกลับจากบริษัท
+                            <button className={`px-4 py-1 rounded-full text-sm ${bookingDetails.status_name === 'ยกเลิก' ? 'bg-red-500' : 'bg-orange-500'} text-white`}>
+                                {bookingDetails.status_name === 'ยกเลิก' ? 'การจองนี้ถูกยกเลิกแล้ว' : 'รอการติดต่อกลับจากบริษัท'}
                             </button>
                         </div>
                     </div>
@@ -139,9 +157,14 @@ function BookingDetailPage() {
                 <hr className="my-4" />
 
                 {/* Cancel Button */}
-                <button className="w-full mt-6 bg-red-500 text-white py-3 rounded-lg">
-                    ยกเลิกการจอง
-                </button>
+                {bookingDetails.status_name !== 'ยกเลิก' && (
+                    <button
+                        onClick={handleCancelBooking}
+                        className="w-full mt-6 bg-red-500 text-white py-3 rounded-lg"
+                    >
+                        ยกเลิกการจอง
+                    </button>
+                )}
             </main>
         </div>
     );

@@ -12,27 +12,48 @@ function BookingPage() {
     const [loading, setLoading] = useState(true);
     const [selectedTab, setSelectedTab] = useState('upcoming');
 
-    useEffect(() => {
-        const fetchBookings = async () => {
-            try {
-                const res = await fetch('/api/get-bookings');
-                const data = await res.json();
-                if (data.success) {
-                    setBookings(data.bookings);
-                }
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching bookings:', error);
-                setLoading(false);
+    const fetchBookings = async () => {
+        try {
+            const res = await fetch('/api/get-bookings');
+            const data = await res.json();
+            if (data.success) {
+                setBookings(data.bookings);
             }
-        };
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching bookings:', error);
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchBookings();
     }, []);
 
-    const handleCancelBooking = (bookingId) => {
-        console.log(`Cancel booking ID: ${bookingId}`);
-        // Add logic to handle booking cancellation
+    const handleCancelBooking = async (bookingId) => {
+        try {
+            const response = await fetch(`/api/bookings/cancel-booking?id=${bookingId}`, {
+                method: 'POST',
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                alert("ยกเลิกการจองเรียบร้อย");
+
+                // อัปเดตสถานะการจองใน state bookings โดยตรง
+                setBookings(prevBookings =>
+                    prevBookings.map(booking =>
+                        booking.booking_id === bookingId
+                            ? { ...booking, status_name: 'ยกเลิก' }
+                            : booking
+                    )
+                );
+            } else {
+                alert("ไม่สามารถยกเลิกการจองได้");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
     };
 
     return (
@@ -40,7 +61,7 @@ function BookingPage() {
             <header className="w-full max-w-md mx-auto bg-blue-800 text-white shadow p-4 flex items-center justify-between">
                 <div className="flex items-center">
                     <FaCar className="text-white mr-2" size={24} />
-                    <h1 className="text-lg font-semibold">การจองของคุณ</h1>
+                    <h1 className="text-lg font-semibold">รถเช่า</h1>
                 </div>
                 <FaHeart className="text-white" size={24} onClick={() => router.push('/favorites')} />
             </header>
@@ -71,9 +92,9 @@ function BookingPage() {
                     bookings
                         .filter((booking) => {
                             if (selectedTab === 'upcoming') {
-                                return new Date(booking.return_date) >= new Date();
+                                return booking.status_name !== 'ยกเลิก' && booking.status_name !== 'คืนรถแล้ว';
                             } else {
-                                return new Date(booking.return_date) < new Date();
+                                return booking.status_name === 'ยกเลิก' || booking.status_name === 'คืนรถแล้ว';
                             }
                         })
                         .map((booking) => (
@@ -102,14 +123,16 @@ function BookingPage() {
                                         <strong>สถานที่รับ-ส่ง:</strong> {booking.pickup_location || 'สถานที่จอง'}
                                     </p>
                                 </div>
-                                <div className="mt-4 flex justify-between items-center w-full">
-                                    <button
-                                        className="bg-yellow-500 text-white px-4 py-1 rounded-lg"
-                                        onClick={() => handleCancelBooking(booking.booking_id)}
-                                    >
-                                        รอการติดต่อจากบริษัท
-                                    </button>
-                                </div>
+                                {selectedTab === 'upcoming' && (
+                                    <div className="mt-4 flex justify-between items-center w-full">
+                                        <button
+                                            className="bg-yellow-500 text-white px-4 py-1 rounded-lg"
+                                            onClick={() => handleCancelBooking(booking.booking_id)}
+                                        >
+                                            ยกเลิกการจอง
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ))
                 )}
