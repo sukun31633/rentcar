@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // ใช้ next/navigation แทน next/router
-import Header from '../components/Header';  // นำเข้า Header
 import Container from '../components/Container'; // นำเข้า Container
 import Carousel from '../components/Carousel'; // นำเข้า Carousel
 
@@ -61,7 +60,7 @@ function DataCar() {
     <Container>
       <div className="min-h-screen flex flex-col items-center bg-gray-100 p-0"> 
         {/* ส่วนหัว - ทำให้ Header เต็มความกว้าง */}
-        <Header className="w-full" /> 
+         
 
         {/* ส่วน Carousel - ทำให้ Carousel เต็มความกว้าง */}
         <section className="w-full h-72 mb-8">
