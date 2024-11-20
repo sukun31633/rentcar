@@ -1,80 +1,95 @@
-// src/app/profile/page.jsx
 "use client";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { FaArrowLeft } from 'react-icons/fa';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { FaArrowLeft } from "react-icons/fa";
 
-const ProfilePage = () => {
+function ProfilePage() {
     const router = useRouter();
+    const [userData, setUserData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const handleSave = () => {
-        // Logic สำหรับการบันทึกข้อมูล เช่น การส่งข้อมูลไปยัง backend
-        console.log('Saving profile...');
-    };
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const phone = "0968707777"; // เปลี่ยนเบอร์นี้ให้ตรงกับที่ใช้
+                const res = await fetch(`/api/get-user`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ phone }),
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    setUserData(data.user);
+                } else {
+                    setError(data.error);
+                }
+            } catch (err) {
+                setError("ไม่สามารถดึงข้อมูลผู้ใช้ได้");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen bg-gray-50">
+                <p className="text-lg font-medium text-gray-600">กำลังโหลดข้อมูล...</p>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex justify-center items-center min-h-screen bg-gray-50">
+                <p className="text-lg font-medium text-red-600">{error}</p>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center">
             {/* Header */}
-            <header className="w-full max-w-md bg-white shadow p-4 flex items-center justify-between">
-                <button onClick={() => router.back()} className="text-gray-600">
+            <header className="w-full max-w-md bg-white text-black shadow p-4 flex items-center justify-between">
+                <button onClick={() => window.history.back()} className="text-black text-lg">
                     <FaArrowLeft />
                 </button>
-                <h1 className="text-lg font-semibold text-center flex-grow">ข้อมูลของฉัน</h1>
+                <h1 className="text-lg font-semibold text-center flex-grow">ข้อมูลส่วนตัว</h1>
                 <div className="w-5"></div> {/* Spacer */}
             </header>
 
-            {/* Content */}
-            <main className="flex flex-col justify-between w-full max-w-md bg-white p-6 rounded shadow mt-4 flex-grow">
+            {/* Profile Information */}
+            <main className="w-full max-w-md bg-white shadow-lg mt-6 rounded-lg px-6 py-8">
+                <h2 className="text-lg font-bold text-gray-700 mb-4">ข้อมูลส่วนตัว</h2>
                 <div className="space-y-4">
-                    <h2 className="text-lg font-semibold mb-4">ข้อมูลของฉัน</h2>
-                    <form className="space-y-4">
-                        <div className="flex flex-col">
-                            <label className="text-gray-600">ชื่อ</label>
-                            <input
-                                type="text"
-                                placeholder="ชื่อ"
-                                className="mt-1 p-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label className="text-gray-600">นามสกุล</label>
-                            <input
-                                type="text"
-                                placeholder="นามสกุล"
-                                className="mt-1 p-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label className="text-gray-600">อีเมล</label>
-                            <input
-                                type="email"
-                                placeholder="อีเมลสำหรับยืนยันการจอง"
-                                className="mt-1 p-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <label className="text-gray-600">เบอร์โทร</label>
-                            <input
-                                type="tel"
-                                placeholder="หมายเลขโทรศัพท์มือถือ 10 หลัก"
-                                className="mt-1 p-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
-                    </form>
+                    <div className="flex items-center justify-between">
+                        <p className="font-medium text-gray-600">ชื่อ:</p>
+                        <p className="text-gray-700">{userData.name}</p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <p className="font-medium text-gray-600">นามสกุล:</p>
+                        <p className="text-gray-700">{userData.surname}</p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <p className="font-medium text-gray-600">อีเมล:</p>
+                        <p className="text-gray-700">{userData.email}</p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <p className="font-medium text-gray-600">เบอร์โทร:</p>
+                        <p className="text-gray-700">{userData.phone}</p>
+                    </div>
                 </div>
-
-                {/* Save Button */}
-                <button
-                    type="button"
-                    onClick={handleSave}
-                    className="w-full p-3 bg-blue-500 text-white rounded-md font-semibold mt-6 focus:outline-none focus:ring-2 focus:ring-blue-700"
-                >
-                    บันทึก
-                </button>
             </main>
         </div>
     );
-};
+}
 
 export default ProfilePage;

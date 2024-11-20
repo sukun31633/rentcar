@@ -1,18 +1,28 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaArrowLeft, FaChevronDown } from 'react-icons/fa';
+import i18n from '../i18n';
 
 const LanguagePage = () => {
     const [selectedLanguage, setSelectedLanguage] = useState('ไทย'); // ภาษาเริ่มต้น
     const [dropdownOpen, setDropdownOpen] = useState(false); // สำหรับเปิด-ปิด dropdown
 
-    const languages = ['ไทย', 'English', '中文', '日本語']; // รายการภาษาที่เลือกได้
+    const languages = ['ไทย', 'English']; // รายการภาษาที่เลือกได้
+
+    // โหลดภาษาเริ่มต้นจาก localStorage
+    useEffect(() => {
+        const savedLanguage = localStorage.getItem('selectedLanguage') || 'th';
+        setSelectedLanguage(savedLanguage === 'th' ? 'ไทย' : 'English');
+        i18n.changeLanguage(savedLanguage);
+    }, []);
 
     const changeLanguage = (lang) => {
-        setSelectedLanguage(lang);
-        localStorage.setItem('selectedLanguage', lang); // บันทึกภาษาลง localStorage
-        setDropdownOpen(false); // ปิด dropdown หลังจากเลือกภาษา
+        const languageCode = lang === 'ไทย' ? 'th' : 'en'; // กำหนดรหัสภาษา
+        setSelectedLanguage(lang); // อัปเดต state ของภาษา
+        i18n.changeLanguage(languageCode); // ใช้ i18next เปลี่ยนภาษา
+        localStorage.setItem('selectedLanguage', languageCode); // บันทึกค่าภาษาใน localStorage
+        setDropdownOpen(false); // ปิด dropdown
     };
 
     return (

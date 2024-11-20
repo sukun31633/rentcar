@@ -128,29 +128,31 @@ function BookingDetailPage() {
 
                 <hr className="my-4" />
 
-                <section className="mb-4">
-                    <h3 className="text-md font-bold mb-2">รายละเอียดการจอง</h3>
-                    <div className="flex justify-between">
-                        <FaCalendarAlt className="text-blue-500" />
-                        <span className="text-blue-500 text-right">{formatDate(bookingDetails?.pickup_date)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <FaMapMarkerAlt className="text-blue-500" />
-                        <span className="text-blue-500 text-right">{formatDate(bookingDetails?.return_date)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <FaUser className="text-blue-500" />
-                        <span className="text-blue-500 text-right">{bookingDetails?.user_first_name} {bookingDetails?.user_last_name}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <FaEnvelope className="text-blue-500" />
-                        <span className="text-blue-500 text-right">{bookingDetails?.user_email}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <FaPhone className="text-blue-500" />
-                        <span className="text-blue-500 text-right">{bookingDetails?.user_phone}</span>
-                    </div>
-                </section>
+            <section className="mb-4">
+                <h3 className="text-md font-bold mb-2">รายละเอียดการจอง</h3>
+                <div className="flex items-center gap-4 mb-2">
+                    <FaCalendarAlt className="text-blue-500 flex-none" />
+                    <span className="flex-grow text-right text-blue-500">{formatDate(bookingDetails?.pickup_date)}</span>
+                </div>
+                <div className="flex items-center gap-4 mb-2">
+                    <FaMapMarkerAlt className="text-blue-500 flex-none" />
+                    <span className="flex-grow text-right text-blue-500">{formatDate(bookingDetails?.return_date)}</span>
+                </div>
+                <div className="flex items-center gap-4 mb-2">
+                    <FaUser className="text-blue-500 flex-none" />
+                    <span className="flex-grow text-right text-blue-500">{bookingDetails?.user_first_name} {bookingDetails?.user_last_name}</span>
+                </div>
+                <div className="flex items-center gap-4 mb-2">
+                    <FaEnvelope className="text-blue-500 flex-none" />
+                    <span className="flex-grow text-right text-blue-500">{bookingDetails?.user_email}</span>
+                </div>
+                <div className="flex items-center gap-4 mb-2">
+                    <FaPhone className="text-blue-500 flex-none" />
+                    <span className="flex-grow text-right text-blue-500">{bookingDetails?.user_phone}</span>
+                </div>
+            </section>
+
+
 
                 <hr className="my-4" />
 

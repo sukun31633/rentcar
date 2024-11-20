@@ -7,6 +7,7 @@ import DestinationCard from '../components/DestinationCard';
 import PromotionCard from '../components/PromotionCard';
 import Container from '../components/Container'; // ตรวจสอบการ import ว่าอยู่ที่ถูกต้อง
 
+
 export const metadata = {
   title: 'หน้าแรก | Rent A Car',
   description: 'เว็บไซต์สำหรับการเช่ารถที่ดีที่สุด',
