@@ -1,5 +1,126 @@
 {
-  "welcome": "Welcome",
-  "description": "This is your homepage"
+  "language": {
+      "title": "Language",
+      "selectLanguage": "Select Language"
+  },
   
-}
+    "support": {
+        "title": "Support Center",
+        "contactUs": "Contact Us",
+        "phoneNumber": "062-974-9495",
+        "serviceTime": "Service hours: 9:00 AM - 9:00 PM"
+    },
+    
+      "policy": {
+        "title": "Privacy Policy",
+        "introduction": "Our company recognizes the importance of protecting your personal information. We are committed to maintaining the privacy of user data in all operations. We would like to clarify the details of how we collect and use your personal data as follows:",
+        "section1": {
+          "title": "1. Data Collection",
+          "content": "We may collect your personal data when you register, use our services, or contact us. The data collected may include but is not limited to your name, surname, email address, home address, phone number, and usage data."
+        },
+        "section2": {
+          "title": "2. Use of Information",
+          "content": "The information we collect will be used to improve our services, process orders, send news and special offers related to our services. Your data will only be kept for lawful purposes and as long as necessary."
+        },
+        "section3": {
+          "title": "3. Sharing Information with Third Parties",
+          "content": "We may share your information with partners and third-party service providers if necessary to improve our services. However, we will not share or sell your personal data to third parties without your consent."
+        },
+        "section4": {
+          "title": "4. Data Security",
+          "content": "We are committed to protecting your personal data with appropriate security measures. However, transmitting data over the Internet cannot be guaranteed to be 100% secure. Therefore, we recommend that you use caution when using our services."
+        },
+        "section5": {
+          "title": "5. Your Rights",
+          "content": "You have the right to access and correct your personal data, as well as the right to request deletion or stop the use of your data. If you wish to exercise these rights, you can contact us through the provided contact information."
+        },
+        "section6": {
+          "title": "6. Policy Updates",
+          "content": "We may update this privacy policy from time to time to comply with changes in laws or our services. You can review the latest policy on our website."
+        },
+        "section7": {
+          "title": "7. Contact Us",
+          "content": "If you have any questions regarding this privacy policy or require additional information, you can contact us at contact@sc-sparksolution.com."
+        }
+      },
+      
+        "profile": {
+          "title": "Profile",
+          "header": "Personal Information",
+          "firstName": "First Name",
+          "lastName": "Last Name",
+          "email": "Email",
+          "phone": "Phone",
+          "loading": "Loading data...",
+          "errorFetchingUser": "Unable to fetch user data"
+        },
+        
+          "notifications": {
+            "title": "App Notifications",
+            "header": "Manage Notifications",
+            "promotion": "Promotions",
+            "messages": "Messages"
+          },
+          
+          "more": {
+            "title": "More Options",
+            "myProfile": "My Profile",
+            "notifications": "Notifications",
+            "language": "Language",
+            "policy": "Policy",
+            "support": "Support",
+            "logout": "Log Out"
+          },
+            
+              "home": {
+                "latestCars": "Latest Cars",
+                "popularCars": "Popular Cars",
+                "recommendedDestinations": "Recommended Destinations",
+                "promotions": "Special Promotions"
+              },
+              "cars": {
+                "mazda3": "Mazda 3",
+                "toyotaAltis": "Toyota Altis",
+                "mazda2": "Mazda 2",
+                "toyotaVios": "Toyota Vios",
+                "hondaCivic": "Honda Civic FL5"
+              },
+              "destinations": {
+                "bangkok": "Bangkok",
+                "phitsanulok": "Phitsanulok",
+                "phuket": "Phuket",
+                "mistMountain": "Misty Mountain",
+                "pattaya": "Pattaya"
+              },
+              "promotions": {
+                "discountHonda": "Discount: Only 10,000 ฿/day",
+                "discountMazda2": "Discount: Only 1,000 ฿/day",
+                "discountMazda3": "Discount: Only 1,800 ฿/day",
+                "discountToyota": "Discount: Only 500 ฿/day"
+              },
+              "header":{
+                "carRental": "Car Rental",
+                "signOut": "Sign Out"
+              }
+            }
+            
+            
+            
+              
+            
+              
+              
+               
+              
+            
+            
+          
+          
+        
+      
+      
+    
+    
+
+
+

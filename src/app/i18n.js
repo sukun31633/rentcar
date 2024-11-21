@@ -1,19 +1,20 @@
-import i18n from 'i18next';
+import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-
 import en from './locales/en.json';
 import th from './locales/th.json';
 
-i18n.use(initReactI18next).init({
+i18next
+  .use(initReactI18next)
+  .init({
     resources: {
-        en: { translation: en },
-        th: { translation: th },
+      en: { translation: en },
+      th: { translation: th },
     },
-    lng: localStorage.getItem('selectedLanguage') || 'th', // ค่าเริ่มต้นภาษา
-    fallbackLng: 'en', // ภาษา fallback
+    lng: 'th', // เริ่มต้นเป็นภาษาไทย
+    fallbackLng: 'en', // ถ้าไม่มีภาษาในไฟล์ จะใช้ภาษาอังกฤษ
     interpolation: {
-        escapeValue: false, // ป้องกัน XSS
+      escapeValue: false, // React จัดการการ escaping อยู่แล้ว
     },
-});
+  });
 
-export default i18n;
+export default i18next;

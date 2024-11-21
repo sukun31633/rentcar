@@ -1,23 +1,23 @@
+// src/app/app/page.jsx
+"use client";
+
 import React from 'react';
-import Header from '../components/Header'; // เปลี่ยนจาก Navbar เป็น Header
+import { useTranslation } from 'react-i18next'; // Import translation hook
+import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Carousel from '../components/Carousel';
 import CarCard from '../components/CarCard';
 import DestinationCard from '../components/DestinationCard';
 import PromotionCard from '../components/PromotionCard';
-import Container from '../components/Container'; // ตรวจสอบการ import ว่าอยู่ที่ถูกต้อง
-
-
-export const metadata = {
-  title: 'หน้าแรก | Rent A Car',
-  description: 'เว็บไซต์สำหรับการเช่ารถที่ดีที่สุด',
-};
+import Container from '../components/Container';
 
 export default function Home() {
+  const { t } = useTranslation(); // Initialize translation hook
+
   return (
     <Container>
       <main className="bg-gray-100 min-h-screen flex flex-col items-center w-full">
-        {/* ใช้ Header แทน Navbar */}
+        {/* Header */}
         <Header />
 
         {/* Carousel Section */}
@@ -27,7 +27,7 @@ export default function Home() {
 
         {/* Latest Cars Section */}
         <section className="p-4 w-full">
-          <h2 className="text-2xl font-bold mb-4">เข้าสู่ล่าสุด</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('home.latestCars')}</h2>
           <div className="grid grid-cols-2 gap-4">
             <CarCard name="Mazda 3" year="2021" imageSrc="/image/cmazda3.png" />
             <CarCard name="Toyota Altis" year="2019" imageSrc="/image/ctoyota.png" />
@@ -36,7 +36,7 @@ export default function Home() {
 
         {/* Popular Cars Section */}
         <section className="p-4 w-full">
-          <h2 className="text-2xl font-bold mb-4">ได้รับความนิยม</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('home.popularCars')}</h2>
           <div className="grid grid-cols-2 gap-4">
             <CarCard name="Mazda 2" year="2020" imageSrc="/image/cmazda2.png" />
             <CarCard name="Toyota Vios" year="2018" imageSrc="/image/ctoyota.png" />
@@ -46,7 +46,7 @@ export default function Home() {
 
         {/* Recommended Destinations Section */}
         <section className="p-4 w-full">
-          <h2 className="text-2xl font-bold mb-4">ปลายทางแนะนำ</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('home.recommendedDestinations')}</h2>
           <div className="grid grid-cols-2 gap-4">
             <DestinationCard name="กรุงเทพ" imageSrc="/image/travelbangkok.png" />
             <DestinationCard name="พิษณุโลก" imageSrc="/image/travelphit.png" />
@@ -58,12 +58,12 @@ export default function Home() {
 
         {/* Promotions Section */}
         <section className="p-4 w-full">
-          <h2 className="text-2xl font-bold mb-4">กิจกรรมพิเศษ</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('home.promotions')}</h2>
           <div className="grid grid-cols-2 gap-4">
-            <PromotionCard title="ลดราคาเหลือ 10000 ฿/day" imageSrc= "/image/honda.png" />
-            <PromotionCard title="ลดราคาเหลือ 1000 ฿/day" imageSrc= "/image/mazda2.png" />
+            <PromotionCard title="ลดราคาเหลือ 10000 ฿/day" imageSrc="/image/honda.png" />
+            <PromotionCard title="ลดราคาเหลือ 1000 ฿/day" imageSrc="/image/mazda2.png" />
             <PromotionCard title="ลดราคาเหลือ 1800 ฿/day" imageSrc="/image/mazda3.png" />
-            <PromotionCard title="ลดราคาเหลือ 500 ฿/day" imageSrc= "/image/toyota.png" />
+            <PromotionCard title="ลดราคาเหลือ 500 ฿/day" imageSrc="/image/toyota.png" />
           </div>
         </section>
 

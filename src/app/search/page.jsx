@@ -3,19 +3,24 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaCalendarAlt, FaClock, FaArrowLeft } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next'; // เพิ่มการใช้ useTranslation
 
 function SearchPage() {
     const router = useRouter();
-    const [location, setLocation] = useState('');
+    const { t } = useTranslation(); // ใช้ useTranslation สำหรับการแปล
+    const [location, setLocation] = useState('');  // เก็บข้อมูลที่เลือก
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [startTime, setStartTime] = useState('10:00');
     const [endTime, setEndTime] = useState('10:00');
 
     const handleSearch = () => {
+        // แปลข้อมูลจังหวัดที่ผู้ใช้เลือก
+        const translatedLocation = t(location);  // แปลจังหวัดตามภาษา
+
         // สร้าง query string โดยส่งข้อมูลที่กรอกไป
         const query = new URLSearchParams({
-            location,
+            location: translatedLocation,
             startDate,
             endDate,
             startTime,
@@ -36,18 +41,16 @@ function SearchPage() {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
-            {/* Header */}
             <header className="w-full max-w-md bg-white shadow p-4 mb-4 flex items-center justify-between">
                 <button onClick={handleBack} className="text-gray-600">
                     <FaArrowLeft />
                 </button>
                 <h1 className="text-lg font-semibold flex-grow text-center">
-                    ค้นหารถเช่า
+                    {t('searchCar')} {/* แปลคำว่า "ค้นหารถเช่า" */}
                 </h1>
-                <div className="w-6"></div> {/* Placeholder to balance the layout */}
+                <div className="w-6"></div>
             </header>
 
-            {/* Content */}
             <main className="w-full max-w-md bg-white p-4 rounded shadow space-y-6">
                 {/* Dropdown สำหรับเลือกสถานที่ */}
                 <div className="relative">
@@ -55,7 +58,7 @@ function SearchPage() {
                         value={location} 
                         onChange={(e) => setLocation(e.target.value)} 
                         className="w-full p-3 border rounded text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">ค้นหาตามจังหวัด</option>
+                        <option value="">{t('searchByProvince')}</option> {/* แปลคำว่า "ค้นหาตามจังหวัด" */}
                         {provinces.map((province, index) => (
                             <option key={index} value={province}>{province}</option>
                         ))}
@@ -67,7 +70,7 @@ function SearchPage() {
                 <div className="border rounded shadow-sm p-4 flex items-center justify-between">
                     <div className="flex-1 flex flex-col items-center">
                         <label className="text-sm text-gray-500 mb-1 flex items-center gap-2">
-                            <FaCalendarAlt className="text-blue-500" /> วันที่รับรถ
+                            <FaCalendarAlt className="text-blue-500" /> {t('pickupDate')} {/* แปลคำว่า "วันที่รับรถ" */}
                         </label>
                         <input 
                             type="date" 
@@ -79,7 +82,7 @@ function SearchPage() {
                     <div className="w-px bg-gray-300 h-full mx-4"></div>
                     <div className="flex-1 flex flex-col items-center">
                         <label className="text-sm text-gray-500 mb-1 flex items-center gap-2">
-                            <FaCalendarAlt className="text-blue-500" /> วันที่คืนรถ
+                            <FaCalendarAlt className="text-blue-500" /> {t('returnDate')} {/* แปลคำว่า "วันที่คืนรถ" */}
                         </label>
                         <input 
                             type="date" 
@@ -94,7 +97,7 @@ function SearchPage() {
                 <div className="border rounded shadow-sm p-4 flex items-center justify-between">
                     <div className="flex-1 flex flex-col items-center">
                         <label className="text-sm text-gray-500 mb-1 flex items-center gap-2">
-                            <FaClock className="text-blue-500" /> เวลารับรถ
+                            <FaClock className="text-blue-500" /> {t('pickupTime')} {/* แปลคำว่า "เวลารับรถ" */}
                         </label>
                         <input 
                             type="time" 
@@ -106,7 +109,7 @@ function SearchPage() {
                     <div className="w-px bg-gray-300 h-full mx-4"></div>
                     <div className="flex-1 flex flex-col items-center">
                         <label className="text-sm text-gray-500 mb-1 flex items-center gap-2">
-                            <FaClock className="text-blue-500" /> เวลาคืนรถ
+                            <FaClock className="text-blue-500" /> {t('returnTime')} {/* แปลคำว่า "เวลาคืนรถ" */}
                         </label>
                         <input 
                             type="time" 
@@ -121,7 +124,7 @@ function SearchPage() {
                 <button 
                     onClick={handleSearch} 
                     className="w-full p-3 bg-blue-500 text-white rounded font-semibold focus:outline-none focus:ring-2 focus:ring-blue-700">
-                    ค้นหารถ
+                    {t('searchCarButton')} {/* แปลคำว่า "ค้นหารถ" */}
                 </button>
             </main>
         </div>

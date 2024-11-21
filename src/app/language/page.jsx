@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { FaArrowLeft, FaChevronDown } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 import i18n from '../i18n';
 
 const LanguagePage = () => {
+    const { t } = useTranslation(); // ใช้ useTranslation
     const [selectedLanguage, setSelectedLanguage] = useState('ไทย'); // ภาษาเริ่มต้น
     const [dropdownOpen, setDropdownOpen] = useState(false); // สำหรับเปิด-ปิด dropdown
 
@@ -12,16 +14,22 @@ const LanguagePage = () => {
 
     // โหลดภาษาเริ่มต้นจาก localStorage
     useEffect(() => {
-        const savedLanguage = localStorage.getItem('selectedLanguage') || 'th';
-        setSelectedLanguage(savedLanguage === 'th' ? 'ไทย' : 'English');
-        i18n.changeLanguage(savedLanguage);
+        const savedLanguage =
+            typeof window !== 'undefined' && localStorage.getItem('selectedLanguage')
+                ? localStorage.getItem('selectedLanguage')
+                : 'th';
+        const langLabel = savedLanguage === 'th' ? 'ไทย' : 'English';
+        setSelectedLanguage(langLabel);
+        i18n.changeLanguage(savedLanguage); // ตั้งค่าภาษาใน i18n
     }, []);
 
     const changeLanguage = (lang) => {
         const languageCode = lang === 'ไทย' ? 'th' : 'en'; // กำหนดรหัสภาษา
         setSelectedLanguage(lang); // อัปเดต state ของภาษา
         i18n.changeLanguage(languageCode); // ใช้ i18next เปลี่ยนภาษา
-        localStorage.setItem('selectedLanguage', languageCode); // บันทึกค่าภาษาใน localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('selectedLanguage', languageCode); // บันทึกค่าภาษาใน localStorage
+        }
         setDropdownOpen(false); // ปิด dropdown
     };
 
@@ -32,17 +40,19 @@ const LanguagePage = () => {
                 <button onClick={() => window.history.back()} className="text-gray-600">
                     <FaArrowLeft />
                 </button>
-                <h1 className="text-lg font-semibold text-center flex-grow">ภาษา / Language</h1>
+                <h1 className="text-lg font-semibold text-center flex-grow">
+                    {t('language.title')} {/* ใช้การแปล */}
+                </h1>
                 <div className="w-5"></div> {/* Spacer */}
             </header>
 
             {/* Content */}
             <main className="w-full max-w-md bg-white p-6 rounded shadow mt-4 flex-grow">
-                <h2 className="text-lg font-semibold mb-4">ภาษา / Language</h2>
+                <h2 className="text-lg font-semibold mb-4">{t('language.selectLanguage')}</h2>
                 <div className="space-y-4">
                     {/* ปุ่มแสดงภาษาและ dropdown */}
                     <div className="relative">
-                        <button 
+                        <button
                             className="flex items-center justify-between w-full py-4 px-4 bg-white shadow-sm rounded h-16 border border-gray-200"
                             onClick={() => setDropdownOpen(!dropdownOpen)}
                         >
@@ -53,10 +63,12 @@ const LanguagePage = () => {
                         {dropdownOpen && (
                             <div className="absolute w-full bg-white shadow rounded mt-2 border border-gray-200">
                                 {languages.map((lang) => (
-                                    <div 
+                                    <div
                                         key={lang}
                                         onClick={() => changeLanguage(lang)} // เมื่อเลือกภาษา
-                                        className={`py-2 px-4 cursor-pointer ${selectedLanguage === lang ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+                                        className={`py-2 px-4 cursor-pointer ${
+                                            selectedLanguage === lang ? 'bg-blue-100' : 'hover:bg-gray-100'
+                                        }`}
                                     >
                                         {lang}
                                     </div>
